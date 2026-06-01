@@ -1,0 +1,8 @@
+{
+  "name": "carolyn-morning-messages",
+  "version": "1.0.0",
+  "description": "Daily affirmation app for Carolyn",
+  "dependencies": {
+    "web-push": "^3.6.7"
+  }
+}
