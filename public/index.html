@@ -528,7 +528,6 @@
 <div class="lightbox" id="lightbox" style="display:none" onclick="closeLightbox(event)">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
   <img id="lightboxImg" src="" alt="" />
-  <div class="lightbox-label" id="lightboxLabel"></div>
 </div>
 
 <!-- Modal for past days -->
@@ -547,8 +546,6 @@
   // ── CONFIG ── replace these with your Supabase project values
   const SUPABASE_URL = 'https://istzagkjchlvjsbrvahm.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzdHphZ2tqY2hsdmpzYnJ2YWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTk4MzgsImV4cCI6MjA5NTg3NTgzOH0.7JeL2ScsjC1hoySuKb6q2omgFkGnGoL8dOPDNRNDezk';
-
-  const CARD_LABELS = ['Self-Affirmation', 'For You', 'Scripture', 'Door Note'];
 
   // ── DATE HELPERS ──
   function todayKey() {
@@ -584,9 +581,8 @@
   }
 
   // ── LIGHTBOX ──
-  function openLightbox(src, label) {
+  function openLightbox(src) {
     document.getElementById('lightboxImg').src = src;
-    document.getElementById('lightboxLabel').textContent = label;
     document.getElementById('lightbox').style.display = 'flex';
     document.body.style.overflow = 'hidden';
   }
@@ -618,17 +614,12 @@
       card.className = 'card';
       card.style.animationDelay = (i * 0.08) + 's';
 
-      const tag = document.createElement('div');
-      tag.className = 'card-tag';
-      tag.textContent = CARD_LABELS[i];
-      card.appendChild(tag);
-
       if (url) {
         const img = document.createElement('img');
         img.src = url;
         img.alt = CARD_LABELS[i];
         img.loading = 'lazy';
-        img.onclick = () => openLightbox(url, CARD_LABELS[i]);
+        img.onclick = () => openLightbox(url);
         card.appendChild(img);
       } else {
         const ph = document.createElement('div');
