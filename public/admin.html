@@ -175,6 +175,26 @@
     }
     .drop-zone.has-image .clear-btn { display: flex; }
 
+    /* message textarea */
+    .slot-textarea {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1.5px solid var(--blush);
+      border-radius: 10px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      color: var(--graphite);
+      background: var(--cream);
+      resize: vertical;
+      min-height: 72px;
+      outline: none;
+      transition: border-color 0.2s;
+      line-height: 1.5;
+    }
+    .slot-textarea:focus { border-color: var(--rose); }
+    .slot-textarea::placeholder { color: var(--blush); font-style: italic; }
+
     /* STATUS */
     .status-bar {
       background: var(--warm-white);
@@ -318,10 +338,10 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzdHphZ2tqY2hsdmpzYnJ2YWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTk4MzgsImV4cCI6MjA5NTg3NTgzOH0.7JeL2ScsjC1hoySuKb6q2omgFkGnGoL8dOPDNRNDezk';
 
   const SLOTS = [
-    { key: 'image_1', label: 'Self-Affirmation', desc: '"I am…" personal affirmation' },
-    { key: 'image_2', label: 'For You', desc: '"You are…" third-person message' },
-    { key: 'image_3', label: 'Scripture', desc: 'Biblical quote with brief connection' },
-    { key: 'image_4', label: 'Door Note', desc: 'Final note before she leaves' },
+    { key: 'image_1', textKey: 'text_1', placeholder: 'Add a note for this image… (optional)' },
+    { key: 'image_2', textKey: 'text_2', placeholder: 'Add a note for this image… (optional)' },
+    { key: 'image_3', textKey: 'text_3', placeholder: 'Add a note for this image… (optional)' },
+    { key: 'image_4', textKey: 'text_4', placeholder: 'Add a note for this image… (optional)' },
   ];
 
   const files = { image_1: null, image_2: null, image_3: null, image_4: null };
@@ -335,8 +355,6 @@
   SLOTS.forEach(slot => {
     grid.innerHTML += `
       <div class="upload-slot">
-        <div class="slot-label">${slot.label}</div>
-        <div class="slot-desc">${slot.desc}</div>
         <div class="drop-zone" id="zone_${slot.key}">
           <input type="file" accept="image/*" onchange="handleFile('${slot.key}', this)" />
           <div class="clear-btn" onclick="clearFile(event,'${slot.key}')">✕</div>
@@ -345,6 +363,11 @@
             <p>Tap to choose<br>image</p>
           </div>
         </div>
+        <textarea
+          class="slot-textarea"
+          id="text_${slot.key}"
+          placeholder="${slot.placeholder}"
+        ></textarea>
       </div>`;
   });
 
@@ -428,7 +451,14 @@
           'Content-Type': 'application/json',
           Prefer: 'resolution=merge-duplicates,return=minimal'
         },
-        body: JSON.stringify({ date: dateKey, ...urls })
+        body: JSON.stringify({
+          date: dateKey,
+          ...urls,
+          text_1: document.getElementById('text_image_1')?.value.trim() || null,
+          text_2: document.getElementById('text_image_2')?.value.trim() || null,
+          text_3: document.getElementById('text_image_3')?.value.trim() || null,
+          text_4: document.getElementById('text_image_4')?.value.trim() || null,
+        })
       });
 
       if (!res.ok) throw new Error('Database save failed');
