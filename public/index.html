@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#fdf0f3" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="apple-touch-icon" href="/icon-192.png" />
-  <title>Good Morning, Bunny ♡</title>
+  <title>Good Morning, Carolyn ♡</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -186,6 +186,19 @@
 
     /* tap hint on cards */
     .card img { cursor: zoom-in; }
+
+    /* text beneath card image */
+    .card-message {
+      padding: 16px 18px 20px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--graphite);
+      line-height: 1.65;
+      text-align: center;
+      border-top: 1px solid var(--blush);
+    }
 
     /* ── LIGHTBOX ── */
     .lightbox {
@@ -485,7 +498,7 @@
 
 <header>
   <div class="header-petal"></div>
-  <div class="greeting">Good morning,<br><em>Bunny</em> ♡</div>
+  <div class="greeting">Good morning,<br><em>Bun Bun!!</em> ♡</div>
   <div class="date-display" id="dateDisplay">—</div>
   <div class="heart-divider"><span>♡</span></div>
 </header>
@@ -609,6 +622,8 @@
     dotsEl.innerHTML = '';
 
     const images = [entry.image_1, entry.image_2, entry.image_3, entry.image_4];
+    const texts  = [entry.text_1,  entry.text_2,  entry.text_3,  entry.text_4];
+
     images.forEach((url, i) => {
       const card = document.createElement('div');
       card.className = 'card';
@@ -627,6 +642,15 @@
         ph.innerHTML = '<span>♡</span><p>Coming soon</p>';
         card.appendChild(ph);
       }
+
+      // Optional text beneath image
+      if (texts[i] && texts[i].trim()) {
+        const msg = document.createElement('div');
+        msg.className = 'card-message';
+        msg.textContent = texts[i].trim();
+        card.appendChild(msg);
+      }
+
       carouselEl.appendChild(card);
 
       // dot
