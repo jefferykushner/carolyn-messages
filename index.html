@@ -766,7 +766,7 @@
       const reg = await navigator.serviceWorker.register('/sw.js');
       const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzdHphZ2tqY2hsdmpzYnJ2YWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTk4MzgsImV4cCI6MjA5NTg3NTgzOH0.7JeL2ScsjC1hoySuKb6q2omgFkGnGoL8dOPDNRNDezk')
+        applicationServerKey: urlBase64ToUint8Array('BL6-lDWuoO0jKwTcJPQcGFJbzhpWP3IJ1rP_Aj_f6skOloeESzd_2PMeojf_IAgXJOyIeduW4Bbu1TEmx1If1C4')
       });
       // Save subscription to Supabase
       await fetch(`${SUPABASE_URL}/rest/v1/push_subscriptions`, {
