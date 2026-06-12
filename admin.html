@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Morning Messages</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --blush: #f2c4ce;
+      --rose: #e8919f;
+      --deep-rose: #c9606f;
+      --cream: #fdf0f3;
+      --warm-white: #fffaf8;
+      --graphite: #5a4a4e;
+      --soft-graphite: #8a7a7e;
+      --success: #7a9e7a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: #f5f0f1;
+      color: var(--graphite);
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+
+    .container { max-width: 680px; margin: 0 auto; }
+
+    header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--blush);
+    }
+
+    header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--deep-rose);
+    }
+
+    header p {
+      font-size: 0.85rem;
+      color: var(--soft-graphite);
+      margin-top: 4px;
+    }
+
+    /* DATE PICKER */
+    .field-group {
+      background: var(--warm-white);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px rgba(200,100,110,0.07);
+    }
+
+    .field-group label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--soft-graphite);
+      margin-bottom: 10px;
+    }
+
+    input[type="date"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--blush);
+      border-radius: 10px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.95rem;
+      color: var(--graphite);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="date"]:focus { border-color: var(--rose); }
+
+    /* IMAGE UPLOAD SLOTS */
+    .uploads-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .uploads-grid { grid-template-columns: 1fr; }
+    }
+
+    .upload-slot {
+      background: var(--warm-white);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(200,100,110,0.07);
+    }
+
+    .upload-slot .slot-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--deep-rose);
+      margin-bottom: 4px;
+    }
+
+    .upload-slot .slot-desc {
+      font-size: 0.78rem;
+      color: var(--soft-graphite);
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .drop-zone {
+      border: 2px dashed var(--blush);
+      border-radius: 12px;
+      aspect-ratio: 1/1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      overflow: hidden;
+      position: relative;
+      background: var(--cream);
+    }
+    .drop-zone:hover { border-color: var(--rose); background: #fde8ed; }
+    .drop-zone.has-image { border-style: solid; border-color: var(--rose); }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .drop-zone img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    .drop-zone .drop-hint {
+      text-align: center;
+      color: var(--soft-graphite);
+      z-index: 0;
+    }
+    .drop-zone .drop-hint .icon { font-size: 1.8rem; margin-bottom: 6px; }
+    .drop-zone .drop-hint p { font-size: 0.75rem; line-height: 1.4; }
+
+    .drop-zone .clear-btn {
+      position: absolute;
+      top: 8px; right: 8px;
+      z-index: 3;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--rose);
+      border-radius: 50%;
+      width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      cursor: pointer;
+      color: var(--deep-rose);
+      display: none;
+    }
+    .drop-zone.has-image .clear-btn { display: flex; }
+
+    /* message textarea */
+    .slot-textarea {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1.5px solid var(--blush);
+      border-radius: 10px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      color: var(--graphite);
+      background: var(--cream);
+      resize: vertical;
+      min-height: 72px;
+      outline: none;
+      transition: border-color 0.2s;
+      line-height: 1.5;
+    }
+    .slot-textarea:focus { border-color: var(--rose); }
+    .slot-textarea::placeholder { color: var(--blush); font-style: italic; }
+
+    /* STATUS */
+    .status-bar {
+      background: var(--warm-white);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      font-size: 0.83rem;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 12px rgba(200,100,110,0.07);
+    }
+    .status-bar.show { display: flex; }
+    .status-bar.success { border-left: 3px solid var(--success); color: var(--success); }
+    .status-bar.error { border-left: 3px solid var(--deep-rose); color: var(--deep-rose); }
+    .status-bar.loading { border-left: 3px solid var(--rose); color: var(--soft-graphite); }
+
+    /* SUBMIT */
+    .btn-publish {
+      width: 100%;
+      padding: 16px;
+      background: var(--rose);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 8px;
+    }
+    .btn-publish:hover { background: var(--deep-rose); }
+    .btn-publish:active { transform: scale(0.99); }
+    .btn-publish:disabled { background: var(--blush); cursor: not-allowed; }
+
+    /* PROGRESS */
+    .progress-wrap {
+      height: 4px;
+      background: var(--blush);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .progress-wrap.show { display: block; }
+    .progress-bar {
+      height: 100%;
+      background: var(--rose);
+      border-radius: 2px;
+      transition: width 0.3s;
+      width: 0%;
+    }
+
+    /* RECENT */
+    .recent-section { margin-top: 40px; }
+    .recent-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--graphite);
+      margin-bottom: 16px;
+    }
+    .recent-list { display: flex; flex-direction: column; gap: 10px; }
+    .recent-item {
+      background: var(--warm-white);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 1px 8px rgba(200,100,110,0.06);
+    }
+    .recent-thumb {
+      width: 44px; height: 44px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--cream);
+      flex-shrink: 0;
+    }
+    .recent-info { flex: 1; }
+    .recent-date { font-size: 0.85rem; color: var(--graphite); font-weight: 700; }
+    .recent-sub { font-size: 0.75rem; color: var(--soft-graphite); margin-top: 2px; }
+    .recent-delete {
+      background: none;
+      border: 1px solid var(--blush);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      color: var(--soft-graphite);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .recent-delete:hover { border-color: var(--rose); color: var(--deep-rose); }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>Morning Messages ♡</h1>
+    <p>Upload today's four affirmation images for Carolyn.</p>
+  </header>
+
+  <!-- Date -->
+  <div class="field-group">
+    <label>Date</label>
+    <input type="date" id="dateInput" />
+  </div>
+
+  <!-- Upload slots -->
+  <div class="uploads-grid" id="uploadsGrid">
+    <!-- rendered by JS -->
+  </div>
+
+  <!-- Progress + status -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="status-bar" id="statusBar"></div>
+
+  <!-- Publish button -->
+  <button class="btn-publish" id="publishBtn" onclick="publish()">
+    Publish Today's Messages ♡
+  </button>
+
+  <!-- Recent entries -->
+  <div class="recent-section">
+    <h2>Recent Days</h2>
+    <div class="recent-list" id="recentList">
+      <p style="font-size:0.83rem; color:var(--soft-graphite);">Loading…</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+  const SLOTS = [
+    { key: 'image_1', textKey: 'text_1', placeholder: 'Add a note for this image… (optional)' },
+    { key: 'image_2', textKey: 'text_2', placeholder: 'Add a note for this image… (optional)' },
+    { key: 'image_3', textKey: 'text_3', placeholder: 'Add a note for this image… (optional)' },
+    { key: 'image_4', textKey: 'text_4', placeholder: 'Add a note for this image… (optional)' },
+  ];
+
+  const files = { image_1: null, image_2: null, image_3: null, image_4: null };
+
+  // ── Set today's date ──
+  const today = new Date().toISOString().slice(0, 10);
+  document.getElementById('dateInput').value = today;
+
+  // ── Render upload slots ──
+  const grid = document.getElementById('uploadsGrid');
+  SLOTS.forEach(slot => {
+    grid.innerHTML += `
+      <div class="upload-slot">
+        <div class="drop-zone" id="zone_${slot.key}">
+          <input type="file" accept="image/*" onchange="handleFile('${slot.key}', this)" />
+          <div class="clear-btn" onclick="clearFile(event,'${slot.key}')">✕</div>
+          <div class="drop-hint">
+            <div class="icon">🌸</div>
+            <p>Tap to choose<br>image</p>
+          </div>
+        </div>
+        <textarea
+          class="slot-textarea"
+          id="text_${slot.key}"
+          placeholder="${slot.placeholder}"
+        ></textarea>
+      </div>`;
+  });
+
+  function handleFile(key, input) {
+    const file = input.files[0];
+    if (!file) return;
+    files[key] = file;
+    const zone = document.getElementById('zone_' + key);
+    zone.classList.add('has-image');
+    // show preview
+    let img = zone.querySelector('img');
+    if (!img) { img = document.createElement('img'); zone.appendChild(img); }
+    img.src = URL.createObjectURL(file);
+  }
+
+  function clearFile(e, key) {
+    e.stopPropagation();
+    files[key] = null;
+    const zone = document.getElementById('zone_' + key);
+    zone.classList.remove('has-image');
+    const img = zone.querySelector('img');
+    if (img) img.remove();
+    const input = zone.querySelector('input');
+    input.value = '';
+  }
+
+  // ── Upload to Supabase Storage ──
+  async function uploadImage(file, dateKey, slot) {
+    const ext = file.name.split('.').pop();
+    const path = `${dateKey}/${slot}.${ext}`;
+    const res = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/affirmation-images/${path}`,
+      {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': file.type,
+          'x-upsert': 'true',
+        },
+        body: file
+      }
+    );
+    if (!res.ok) throw new Error(`Upload failed for ${slot}`);
+    return `${SUPABASE_URL}/storage/v1/object/public/affirmation-images/${path}`;
+  }
+
+  // ── Publish ──
+  async function publish() {
+    const dateKey = document.getElementById('dateInput').value;
+    if (!dateKey) return showStatus('Please choose a date.', 'error');
+
+    const hasAny = Object.values(files).some(f => f !== null);
+    if (!hasAny) return showStatus('Please add at least one image.', 'error');
+
+    const btn = document.getElementById('publishBtn');
+    btn.disabled = true;
+    showStatus('Uploading images…', 'loading');
+    showProgress(10);
+
+    try {
+      const urls = {};
+      const keys = Object.keys(files);
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (files[key]) {
+          urls[key] = await uploadImage(files[key], dateKey, key);
+        }
+        showProgress(20 + (i + 1) * 18);
+      }
+
+      showProgress(90);
+      showStatus('Saving…', 'loading');
+
+      // Upsert row in affirmations table
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/affirmations`, {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'resolution=merge-duplicates,return=minimal'
+        },
+        body: JSON.stringify({
+          date: dateKey,
+          ...urls,
+          text_1: document.getElementById('text_image_1')?.value.trim() || null,
+          text_2: document.getElementById('text_image_2')?.value.trim() || null,
+          text_3: document.getElementById('text_image_3')?.value.trim() || null,
+          text_4: document.getElementById('text_image_4')?.value.trim() || null,
+        })
+      });
+
+      if (!res.ok) throw new Error('Database save failed');
+
+      showProgress(100);
+      showStatus("✓ Published! Carolyn's morning is ready ♡", 'success');
+      loadRecent();
+    } catch (err) {
+      showStatus('Error: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      setTimeout(() => hideProgress(), 1200);
+    }
+  }
+
+  function showStatus(msg, type) {
+    const el = document.getElementById('statusBar');
+    el.textContent = msg;
+    el.className = 'status-bar show ' + type;
+  }
+
+  function showProgress(pct) {
+    document.getElementById('progressWrap').classList.add('show');
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+  function hideProgress() {
+    document.getElementById('progressWrap').classList.remove('show');
+    document.getElementById('progressBar').style.width = '0%';
+  }
+
+  // ── Load recent ──
+  async function loadRecent() {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/affirmations?select=date,image_1&order=date.desc&limit=10`,
+      { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+    );
+    const rows = await res.json();
+    const list = document.getElementById('recentList');
+
+    if (!rows.length) {
+      list.innerHTML = `<p style="font-size:0.83rem; color:var(--soft-graphite);">No entries yet.</p>`;
+      return;
+    }
+
+    list.innerHTML = rows.map(r => `
+      <div class="recent-item">
+        ${r.image_1 ? `<img class="recent-thumb" src="${r.image_1}" />` : '<div class="recent-thumb"></div>'}
+        <div class="recent-info">
+          <div class="recent-date">${r.date}</div>
+          <div class="recent-sub">4 images published</div>
+        </div>
+        <button class="recent-delete" onclick="deleteEntry('${r.date}')">Remove</button>
+      </div>
+    `).join('');
+  }
+
+  async function deleteEntry(dateKey) {
+    if (!confirm(`Remove ${dateKey}?`)) return;
+    await fetch(`${SUPABASE_URL}/rest/v1/affirmations?date=eq.${dateKey}`, {
+      method: 'DELETE',
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+    });
+    loadRecent();
+  }
+
+  loadRecent();
+</script>
+</body>
+</html>
