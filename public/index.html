@@ -13,7 +13,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Lato:wght@300;400&family=Caveat:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
     :root {
@@ -25,6 +25,8 @@
       --graphite: #5a4a4e;
       --soft-graphite: #8a7a7e;
       --gold: #d4a96a;
+      --sticky: #fef08a;
+      --sticky-shadow: #e6d44a;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -90,6 +92,75 @@
     }
     .heart-divider span { color: var(--rose); font-size: 0.85rem; }
 
+    /* ── STICKY NOTE ── */
+    .sticky-section {
+      padding: 0 24px 8px;
+    }
+
+    .sticky-note {
+      background: var(--sticky);
+      border-radius: 4px 4px 4px 4px;
+      padding: 20px 22px 24px;
+      position: relative;
+      box-shadow:
+        0 4px 6px rgba(0,0,0,0.08),
+        0 8px 24px rgba(0,0,0,0.06),
+        2px 2px 0 var(--sticky-shadow) inset;
+      transform: rotate(-1deg);
+      animation: stickyIn 0.5s cubic-bezier(0.34,1.26,0.64,1) both;
+    }
+
+    @keyframes stickyIn {
+      from { opacity: 0; transform: rotate(-1deg) translateY(12px); }
+      to   { opacity: 1; transform: rotate(-1deg) translateY(0); }
+    }
+
+    /* tape strip at top */
+    .sticky-note::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48px;
+      height: 20px;
+      background: rgba(255,255,255,0.55);
+      border-radius: 3px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .sticky-note-text {
+      font-family: 'Caveat', cursive;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: #3a3000;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .sticky-note-sig {
+      margin-top: 14px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #7a6000;
+      text-align: right;
+    }
+
+    /* ruled lines on sticky */
+    .sticky-lines {
+      position: absolute;
+      inset: 44px 0 12px;
+      background-image: repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        rgba(180,160,0,0.18) 31px,
+        rgba(180,160,0,0.18) 32px
+      );
+      pointer-events: none;
+      border-radius: 0 0 4px 4px;
+    }
+
     /* ── CARD CAROUSEL ── */
     .card-section {
       padding: 0 0 32px;
@@ -141,28 +212,12 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .card-tag {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(6px);
-      border: 1px solid var(--blush);
-      border-radius: 20px;
-      padding: 3px 10px;
-      font-size: 0.62rem;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--deep-rose);
-      z-index: 2;
-    }
-
     .card img {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
       display: block;
+      cursor: zoom-in;
     }
 
     .card-placeholder {
@@ -183,9 +238,6 @@
       color: var(--soft-graphite);
       letter-spacing: 0.05em;
     }
-
-    /* tap hint on cards */
-    .card img { cursor: zoom-in; }
 
     /* text beneath card image */
     .card-message {
@@ -241,23 +293,6 @@
       transition: background 0.2s;
     }
     .lightbox-close:hover { background: rgba(255,255,255,0.25); }
-
-    .lightbox-label {
-      position: absolute;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 20px;
-      padding: 6px 16px;
-      color: white;
-      font-size: 0.72rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
 
     /* dot indicators */
     .dots {
@@ -453,6 +488,7 @@
       overflow-y: auto;
       padding: 12px 0 40px;
       animation: slideUp 0.3s cubic-bezier(0.34, 1.26, 0.64, 1);
+      position: relative;
     }
     @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
@@ -481,7 +517,6 @@
       padding: 4px;
       z-index: 10;
     }
-    .modal-sheet { position: relative; }
 
     /* ── FOOTER ── */
     footer {
@@ -498,7 +533,7 @@
 
 <header>
   <div class="header-petal"></div>
-  <div class="greeting">Good morning,<br><em>Bun Bun!!</em> ♡</div>
+  <div class="greeting">Good morning,<br><em>Carolyn</em> ♡</div>
   <div class="date-display" id="dateDisplay">—</div>
   <div class="heart-divider"><span>♡</span></div>
 </header>
@@ -510,8 +545,17 @@
   <button class="btn-notify" onclick="requestNotification()">🔔 Turn on morning messages</button>
 </div>
 
+<!-- Sticky note from Jeff -->
+<div class="sticky-section" id="stickySection" style="display:none">
+  <div class="sticky-note">
+    <div class="sticky-lines"></div>
+    <div class="sticky-note-text" id="stickyText"></div>
+    <div class="sticky-note-sig">— Jeff ♡</div>
+  </div>
+</div>
+
 <!-- Today's cards -->
-<div class="card-section">
+<div class="card-section" style="margin-top: 32px;">
   <div class="section-label">Today's Affirmations</div>
   <div class="carousel-wrapper">
     <div class="carousel" id="todayCarousel">
@@ -530,14 +574,12 @@
     <div class="library-title">Past Messages</div>
     <div class="library-count" id="libraryCount"></div>
   </div>
-  <div class="library-grid" id="libraryGrid">
-    <!-- populated by JS -->
-  </div>
+  <div class="library-grid" id="libraryGrid"></div>
 </div>
 
 <footer>Made with <span>♡</span> every single morning</footer>
 
-<!-- Lightbox for full-screen image view -->
+<!-- Lightbox -->
 <div class="lightbox" id="lightbox" style="display:none" onclick="closeLightbox(event)">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
   <img id="lightboxImg" src="" alt="" />
@@ -556,13 +598,11 @@
 </div>
 
 <script>
-  // ── CONFIG ── replace these with your Supabase project values
   const SUPABASE_URL = 'https://istzagkjchlvjsbrvahm.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzdHphZ2tqY2hsdmpzYnJ2YWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTk4MzgsImV4cCI6MjA5NTg3NTgzOH0.7JeL2ScsjC1hoySuKb6q2omgFkGnGoL8dOPDNRNDezk';
 
-  // ── DATE HELPERS ──
   function todayKey() {
-    return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    return new Date().toISOString().slice(0, 10);
   }
 
   function formatDate(iso) {
@@ -575,7 +615,6 @@
     return d.toLocaleDateString('en-CA', { month:'short', day:'numeric' });
   }
 
-  // ── SUPABASE FETCH ──
   async function fetchDay(dateKey) {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/affirmations?date=eq.${dateKey}&select=*`,
@@ -602,12 +641,11 @@
 
   function closeLightbox(e) {
     if (e && e.target !== document.getElementById('lightbox') &&
-        e.target !== document.querySelector('.lightbox-close')) return;
+        !e.target.classList.contains('lightbox-close')) return;
     document.getElementById('lightbox').style.display = 'none';
     document.body.style.overflow = '';
   }
 
-  // close on Escape key
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       document.getElementById('lightbox').style.display = 'none';
@@ -643,7 +681,6 @@
         card.appendChild(ph);
       }
 
-      // Optional text beneath image
       if (texts[i] && texts[i].trim()) {
         const msg = document.createElement('div');
         msg.className = 'card-message';
@@ -653,7 +690,6 @@
 
       carouselEl.appendChild(card);
 
-      // dot
       const dot = document.createElement('div');
       dot.className = 'dot' + (i === 0 ? ' active' : '');
       dot.onclick = () => {
@@ -662,7 +698,6 @@
       dotsEl.appendChild(dot);
     });
 
-    // update dots on scroll
     carouselEl.addEventListener('scroll', () => {
       const idx = Math.round(carouselEl.scrollLeft / carouselEl.offsetWidth);
       [...dotsEl.children].forEach((d, i) => d.classList.toggle('active', i === idx));
@@ -677,6 +712,12 @@
     const entry = await fetchDay(key);
     const carousel = document.getElementById('todayCarousel');
     const dots = document.getElementById('dots');
+
+    // Show sticky note if there's a love note
+    if (entry && entry.love_note && entry.love_note.trim()) {
+      document.getElementById('stickyText').textContent = entry.love_note.trim();
+      document.getElementById('stickySection').style.display = 'block';
+    }
 
     if (!entry) {
       carousel.innerHTML = `
@@ -768,7 +809,6 @@
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array('BL6-lDWuoO0jKwTcJPQcGFJbzhpWP3IJ1rP_Aj_f6skOloeESzd_2PMeojf_IAgXJOyIeduW4Bbu1TEmx1If1C4')
       });
-      // Save subscription to Supabase
       await fetch(`${SUPABASE_URL}/rest/v1/push_subscriptions`, {
         method: 'POST',
         headers: {
@@ -791,7 +831,6 @@
     return out;
   }
 
-  // ── INIT ──
   loadToday();
   loadLibrary();
   checkNotificationStatus();
