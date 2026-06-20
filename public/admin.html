@@ -312,6 +312,18 @@
     <!-- rendered by JS -->
   </div>
 
+  <!-- Love note from Jeff -->
+  <div class="field-group" style="margin-top: 8px;">
+    <label>💛 Love Note from Jeff <span style="font-weight:300; text-transform:none; letter-spacing:0; font-size:0.78rem;">(optional — appears as a handwritten sticky note)</span></label>
+    <textarea
+      id="love_note"
+      placeholder="Write something from the heart… it'll appear as a yellow sticky note at the top of her morning ♡"
+      style="width:100%; padding:12px 14px; border:1.5px solid var(--blush); border-radius:10px; font-family:'Lato',sans-serif; font-size:0.92rem; color:var(--graphite); background:var(--cream); resize:vertical; min-height:100px; outline:none; line-height:1.6; transition:border-color 0.2s;"
+      onfocus="this.style.borderColor='var(--rose)'"
+      onblur="this.style.borderColor='var(--blush)'"
+    ></textarea>
+  </div>
+
   <!-- Progress + status -->
   <div class="progress-wrap" id="progressWrap">
     <div class="progress-bar" id="progressBar"></div>
@@ -458,6 +470,7 @@
           text_2: document.getElementById('text_image_2')?.value.trim() || null,
           text_3: document.getElementById('text_image_3')?.value.trim() || null,
           text_4: document.getElementById('text_image_4')?.value.trim() || null,
+          love_note: document.getElementById('love_note')?.value.trim() || null,
         })
       });
 
