@@ -195,6 +195,81 @@
     .slot-textarea:focus { border-color: var(--rose); }
     .slot-textarea::placeholder { color: var(--blush); font-style: italic; }
 
+    /* ── AUDIO RECORDER ── */
+    .audio-recorder {
+      margin-top: 10px;
+      background: var(--cream);
+      border: 1.5px solid var(--blush);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .rec-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .rec-btn.start {
+      background: var(--rose);
+      color: white;
+    }
+    .rec-btn.start:hover { background: var(--deep-rose); }
+
+    .rec-btn.stop {
+      background: #c9606f;
+      color: white;
+      animation: pulse 1s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201,96,111,0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(201,96,111,0); }
+    }
+
+    .rec-btn.clear {
+      background: none;
+      border: 1px solid var(--blush);
+      color: var(--soft-graphite);
+      font-size: 0.7rem;
+    }
+    .rec-btn.clear:hover { border-color: var(--rose); color: var(--deep-rose); }
+
+    .rec-timer {
+      font-size: 0.75rem;
+      color: var(--deep-rose);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      min-width: 36px;
+    }
+
+    .rec-status {
+      font-size: 0.72rem;
+      color: var(--soft-graphite);
+      font-style: italic;
+      flex: 1;
+    }
+
+    audio.rec-playback {
+      height: 32px;
+      width: 100%;
+      margin-top: 4px;
+      border-radius: 8px;
+    }
+
     /* STATUS */
     .status-bar {
       background: var(--warm-white);
@@ -349,14 +424,20 @@
   const SUPABASE_URL = 'https://istzagkjchlvjsbrvahm.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzdHphZ2tqY2hsdmpzYnJ2YWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTk4MzgsImV4cCI6MjA5NTg3NTgzOH0.7JeL2ScsjC1hoySuKb6q2omgFkGnGoL8dOPDNRNDezk';
 
+  const CLOUDINARY_CLOUD = 'dbv3ahmxu';
+  const CLOUDINARY_PRESET = 'carolyn_audio';
+
   const SLOTS = [
-    { key: 'image_1', textKey: 'text_1', placeholder: 'Add a note for this image… (optional)' },
-    { key: 'image_2', textKey: 'text_2', placeholder: 'Add a note for this image… (optional)' },
-    { key: 'image_3', textKey: 'text_3', placeholder: 'Add a note for this image… (optional)' },
-    { key: 'image_4', textKey: 'text_4', placeholder: 'Add a note for this image… (optional)' },
+    { key: 'image_1', textKey: 'text_1', audioKey: 'audio_1', placeholder: 'Add a note for this image… (optional)' },
+    { key: 'image_2', textKey: 'text_2', audioKey: 'audio_2', placeholder: 'Add a note for this image… (optional)' },
+    { key: 'image_3', textKey: 'text_3', audioKey: 'audio_3', placeholder: 'Add a note for this image… (optional)' },
+    { key: 'image_4', textKey: 'text_4', audioKey: 'audio_4', placeholder: 'Add a note for this image… (optional)' },
   ];
 
   const files = { image_1: null, image_2: null, image_3: null, image_4: null };
+  const audioBlobs = { audio_1: null, audio_2: null, audio_3: null, audio_4: null };
+  const recorders = {};
+  const recTimers = {};
 
   // ── Set today's date ──
   const today = new Date().toISOString().slice(0, 10);
@@ -380,6 +461,11 @@
           id="text_${slot.key}"
           placeholder="${slot.placeholder}"
         ></textarea>
+        <div class="audio-recorder" id="recorder_${slot.audioKey}">
+          <button class="rec-btn start" onclick="startRecording('${slot.audioKey}')">🎙 Record</button>
+          <span class="rec-timer" id="timer_${slot.audioKey}" style="display:none">0:00</span>
+          <span class="rec-status" id="status_${slot.audioKey}">No voice note</span>
+        </div>
       </div>`;
   });
 
@@ -427,6 +513,99 @@
     return `${SUPABASE_URL}/storage/v1/object/public/affirmation-images/${path}`;
   }
 
+  // ── RECORDING ──
+  async function startRecording(audioKey) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      const chunks = [];
+      recorders[audioKey] = { mediaRecorder, stream };
+
+      mediaRecorder.ondataavailable = e => chunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        audioBlobs[audioKey] = blob;
+        stream.getTracks().forEach(t => t.stop());
+
+        // Show playback
+        const recEl = document.getElementById('recorder_' + audioKey);
+        let player = recEl.querySelector('audio');
+        if (!player) { player = document.createElement('audio'); player.className = 'rec-playback'; player.controls = true; recEl.appendChild(player); }
+        player.src = URL.createObjectURL(blob);
+
+        document.getElementById('status_' + audioKey).textContent = 'Voice note ready ✓';
+        document.getElementById('timer_' + audioKey).style.display = 'none';
+
+        // Swap buttons
+        const startBtn = recEl.querySelector('.rec-btn.stop');
+        if (startBtn) {
+          startBtn.className = 'rec-btn clear';
+          startBtn.textContent = '✕ Clear';
+          startBtn.onclick = () => clearRecording(audioKey);
+        }
+      };
+
+      mediaRecorder.start();
+
+      // Update button to Stop
+      const recEl = document.getElementById('recorder_' + audioKey);
+      const btn = recEl.querySelector('.rec-btn');
+      btn.className = 'rec-btn stop';
+      btn.textContent = '⏹ Stop';
+      btn.onclick = () => stopRecording(audioKey);
+
+      // Start timer
+      let secs = 0;
+      const timerEl = document.getElementById('timer_' + audioKey);
+      timerEl.style.display = 'inline';
+      recTimers[audioKey] = setInterval(() => {
+        secs++;
+        const m = Math.floor(secs / 60);
+        const s = String(secs % 60).padStart(2, '0');
+        timerEl.textContent = `${m}:${s}`;
+      }, 1000);
+
+    } catch (err) {
+      alert('Microphone access denied. Please allow microphone in your browser settings.');
+    }
+  }
+
+  function stopRecording(audioKey) {
+    clearInterval(recTimers[audioKey]);
+    if (recorders[audioKey]) {
+      recorders[audioKey].mediaRecorder.stop();
+    }
+  }
+
+  function clearRecording(audioKey) {
+    audioBlobs[audioKey] = null;
+    const recEl = document.getElementById('recorder_' + audioKey);
+    const player = recEl.querySelector('audio');
+    if (player) player.remove();
+    document.getElementById('status_' + audioKey).textContent = 'No voice note';
+    const btn = recEl.querySelector('.rec-btn');
+    btn.className = 'rec-btn start';
+    btn.textContent = '🎙 Record';
+    btn.onclick = () => startRecording(audioKey);
+  }
+
+  // ── UPLOAD AUDIO TO CLOUDINARY ──
+  async function uploadAudio(blob, dateKey, audioKey) {
+    const formData = new FormData();
+    formData.append('file', blob, `${dateKey}_${audioKey}.webm`);
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+    formData.append('folder', 'carolyn-audio');
+    formData.append('resource_type', 'video'); // Cloudinary uses 'video' for audio
+
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/video/upload`,
+      { method: 'POST', body: formData }
+    );
+    if (!res.ok) throw new Error(`Audio upload failed for ${audioKey}`);
+    const data = await res.json();
+    return data.secure_url;
+  }
+
   // ── Publish ──
   async function publish() {
     const dateKey = document.getElementById('dateInput').value;
@@ -442,19 +621,27 @@
 
     try {
       const urls = {};
-      const keys = Object.keys(files);
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        if (files[key]) {
-          urls[key] = await uploadImage(files[key], dateKey, key);
+      const imageKeys = Object.keys(files);
+      for (let i = 0; i < imageKeys.length; i++) {
+        const key = imageKeys[i];
+        if (files[key]) urls[key] = await uploadImage(files[key], dateKey, key);
+        showProgress(10 + (i + 1) * 12);
+      }
+
+      // Upload audio clips to Cloudinary
+      showStatus('Uploading voice notes…', 'loading');
+      const audioKeys = Object.keys(audioBlobs);
+      for (let i = 0; i < audioKeys.length; i++) {
+        const key = audioKeys[i];
+        if (audioBlobs[key]) {
+          urls[key] = await uploadAudio(audioBlobs[key], dateKey, key);
         }
-        showProgress(20 + (i + 1) * 18);
+        showProgress(60 + (i + 1) * 7);
       }
 
       showProgress(90);
       showStatus('Saving…', 'loading');
 
-      // Upsert row in affirmations table
       const res = await fetch(`${SUPABASE_URL}/rest/v1/affirmations`, {
         method: 'POST',
         headers: {
