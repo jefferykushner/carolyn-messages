@@ -937,8 +937,35 @@
     const dots = document.getElementById('dots');
 
     // Show sticky note if there's a love note
-    if (entry && entry.love_note && entry.love_note.trim()) {
-      document.getElementById('stickyText').textContent = entry.love_note.trim();
+    if (entry && (entry.love_note || entry.audio_love_note)) {
+      if (entry.love_note && entry.love_note.trim()) {
+        document.getElementById('stickyText').textContent = entry.love_note.trim();
+      }
+      // Add play button to sticky if audio exists
+      if (entry.audio_love_note) {
+        const stickyEl = document.querySelector('.sticky-note');
+        const audio = new Audio(entry.audio_love_note);
+        const playBtn = document.createElement('button');
+        playBtn.className = 'play-btn';
+        playBtn.style.cssText = 'position:absolute; bottom:12px; left:14px; font-size:1rem;';
+        playBtn.textContent = '▶';
+        playBtn.title = 'Hear Jeff read this note';
+        playBtn.onclick = () => {
+          if (audio.paused) {
+            document.querySelectorAll('audio').forEach(a => a.pause());
+            document.querySelectorAll('.play-btn').forEach(b => { b.textContent = '▶'; b.classList.remove('playing'); });
+            audio.play();
+            playBtn.textContent = '⏸';
+            playBtn.classList.add('playing');
+            audio.onended = () => { playBtn.textContent = '▶'; playBtn.classList.remove('playing'); };
+          } else {
+            audio.pause();
+            playBtn.textContent = '▶';
+            playBtn.classList.remove('playing');
+          }
+        };
+        stickyEl.appendChild(playBtn);
+      }
       document.getElementById('stickySection').style.display = 'block';
     }
 
