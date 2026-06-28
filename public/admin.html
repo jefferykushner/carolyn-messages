@@ -528,15 +528,24 @@
 
       mediaRecorder.ondataavailable = e => chunks.push(e.data);
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
+        // Use the actual recorded MIME type for playback compatibility
+        const mimeType = mediaRecorder.mimeType || 'audio/webm';
+        const blob = new Blob(chunks, { type: mimeType });
         audioBlobs[audioKey] = blob;
         stream.getTracks().forEach(t => t.stop());
 
-        // Show playback
+        // Show playback using object URL
         const recEl = document.getElementById('recorder_' + audioKey);
         let player = recEl.querySelector('audio');
-        if (!player) { player = document.createElement('audio'); player.className = 'rec-playback'; player.controls = true; recEl.appendChild(player); }
-        player.src = URL.createObjectURL(blob);
+        if (!player) {
+          player = document.createElement('audio');
+          player.className = 'rec-playback';
+          player.controls = true;
+          recEl.appendChild(player);
+        }
+        const objectUrl = URL.createObjectURL(blob);
+        player.src = objectUrl;
+        player.load();
 
         document.getElementById('status_' + audioKey).textContent = 'Voice note ready ✓';
         document.getElementById('timer_' + audioKey).style.display = 'none';
@@ -596,11 +605,12 @@
 
   // ── UPLOAD AUDIO TO CLOUDINARY ──
   async function uploadAudio(blob, dateKey, audioKey) {
+    const ext = blob.type.includes('ogg') ? 'ogg' : blob.type.includes('mp4') ? 'mp4' : 'webm';
     const formData = new FormData();
-    formData.append('file', blob, `${dateKey}_${audioKey}.webm`);
+    formData.append('file', blob, `${dateKey}_${audioKey}.${ext}`);
     formData.append('upload_preset', CLOUDINARY_PRESET);
     formData.append('folder', 'carolyn-audio');
-    formData.append('resource_type', 'video'); // Cloudinary uses 'video' for audio
+    formData.append('resource_type', 'video');
 
     const res = await fetch(
       `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/video/upload`,
