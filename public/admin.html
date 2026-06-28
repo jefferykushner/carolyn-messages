@@ -397,6 +397,11 @@
       onfocus="this.style.borderColor='var(--rose)'"
       onblur="this.style.borderColor='var(--blush)'"
     ></textarea>
+    <div class="audio-recorder" id="recorder_audio_love_note" style="margin-top:10px;">
+      <button class="rec-btn start" onclick="startRecording('audio_love_note')">🎙 Record your voice note</button>
+      <span class="rec-timer" id="timer_audio_love_note" style="display:none">0:00</span>
+      <span class="rec-status" id="status_audio_love_note">No voice note</span>
+    </div>
   </div>
 
   <!-- Progress + status -->
@@ -435,7 +440,7 @@
   ];
 
   const files = { image_1: null, image_2: null, image_3: null, image_4: null };
-  const audioBlobs = { audio_1: null, audio_2: null, audio_3: null, audio_4: null };
+  const audioBlobs = { audio_1: null, audio_2: null, audio_3: null, audio_4: null, audio_love_note: null };
   const recorders = {};
   const recTimers = {};
 
@@ -658,6 +663,7 @@
           text_3: document.getElementById('text_image_3')?.value.trim() || null,
           text_4: document.getElementById('text_image_4')?.value.trim() || null,
           love_note: document.getElementById('love_note')?.value.trim() || null,
+          audio_love_note: urls['audio_love_note'] || null,
         })
       });
 
