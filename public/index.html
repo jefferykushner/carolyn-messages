@@ -252,6 +252,85 @@
       border-top: 1px solid var(--blush);
     }
 
+    /* ── FAVOURITE HEART BUTTON ── */
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      border-top: 1px solid var(--blush);
+    }
+
+    /* ── PLAY BUTTON ── */
+    .play-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px 6px;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      color: var(--rose);
+      line-height: 1;
+    }
+    .play-btn:active { transform: scale(1.2); }
+    .play-btn.playing { color: var(--deep-rose); }
+
+    .fav-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.3rem;
+      line-height: 1;
+      padding: 4px 6px;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      color: var(--blush);
+    }
+    .fav-btn:active { transform: scale(1.3); }
+    .fav-btn.active { color: var(--deep-rose); }
+
+    /* ── LIBRARY TABS ── */
+    .library-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 20px;
+      background: var(--warm-white);
+      border-radius: 12px;
+      padding: 4px;
+      box-shadow: 0 1px 8px rgba(200,100,110,0.07);
+    }
+
+    .lib-tab {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 9px;
+      background: none;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--soft-graphite);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lib-tab.active {
+      background: var(--rose);
+      color: white;
+    }
+
+    .fav-empty {
+      grid-column: span 2;
+      text-align: center;
+      padding: 32px 16px;
+      color: var(--soft-graphite);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .fav-empty .icon { font-size: 2rem; margin-bottom: 8px; }
+
     /* ── LIGHTBOX ── */
     .lightbox {
       position: fixed;
@@ -571,8 +650,12 @@
 <!-- Library -->
 <div class="library-section">
   <div class="library-header">
-    <div class="library-title">Past Messages</div>
+    <div class="library-title">Messages</div>
     <div class="library-count" id="libraryCount"></div>
+  </div>
+  <div class="library-tabs">
+    <button class="lib-tab active" id="tabAll" onclick="switchTab('all')">All Days</button>
+    <button class="lib-tab" id="tabFavs" onclick="switchTab('favs')">♥ Favourites</button>
   </div>
   <div class="library-grid" id="libraryGrid"></div>
 </div>
@@ -654,6 +737,96 @@
     }
   });
 
+  // ── FAVOURITES (localStorage) ──
+  function getFavs() {
+    try { return JSON.parse(localStorage.getItem('carolyn_favs') || '{}'); }
+    catch { return {}; }
+  }
+
+  function saveFavs(favs) {
+    localStorage.setItem('carolyn_favs', JSON.stringify(favs));
+  }
+
+  function isFav(dateKey, idx) {
+    const favs = getFavs();
+    return !!(favs[dateKey] && favs[dateKey].includes(idx));
+  }
+
+  function toggleFav(dateKey, idx, btn) {
+    const favs = getFavs();
+    if (!favs[dateKey]) favs[dateKey] = [];
+    const pos = favs[dateKey].indexOf(idx);
+    if (pos === -1) {
+      favs[dateKey].push(idx);
+      btn.textContent = '♥';
+      btn.classList.add('active');
+      // little pop animation
+      btn.style.transform = 'scale(1.4)';
+      setTimeout(() => btn.style.transform = '', 250);
+    } else {
+      favs[dateKey].splice(pos, 1);
+      if (favs[dateKey].length === 0) delete favs[dateKey];
+      btn.textContent = '♡';
+      btn.classList.remove('active');
+    }
+    saveFavs(favs);
+  }
+
+  // ── TABS ──
+  let allEntries = [];
+  let currentTab = 'all';
+
+  function switchTab(tab) {
+    currentTab = tab;
+    document.getElementById('tabAll').classList.toggle('active', tab === 'all');
+    document.getElementById('tabFavs').classList.toggle('active', tab === 'favs');
+    renderLibrary();
+  }
+
+  function renderLibrary() {
+    const grid = document.getElementById('libraryGrid');
+    const today = todayKey();
+    const past = allEntries.filter(e => e.date !== today);
+
+    if (currentTab === 'favs') {
+      const favs = getFavs();
+      const favDates = Object.keys(favs);
+      const favEntries = past.filter(e => favDates.includes(e.date));
+
+      if (favEntries.length === 0) {
+        grid.innerHTML = `<div class="fav-empty"><div class="icon">♡</div><p>Tap the ♡ on any card<br>to save your favourites here.</p></div>`;
+        document.getElementById('libraryCount').textContent = '';
+        return;
+      }
+      document.getElementById('libraryCount').textContent = `${favEntries.length} saved`;
+      renderGrid(grid, favEntries);
+    } else {
+      document.getElementById('libraryCount').textContent = past.length > 0 ? `${past.length} days` : '';
+      if (past.length === 0) {
+        grid.innerHTML = `<p style="grid-column:span 2; color:var(--soft-graphite); font-size:0.82rem; text-align:center; padding:20px 0;">Your library will grow here every day ♡</p>`;
+        return;
+      }
+      renderGrid(grid, past);
+    }
+  }
+
+  function renderGrid(grid, entries) {
+    grid.innerHTML = '';
+    entries.forEach(e => {
+      const card = document.createElement('div');
+      card.className = 'library-entry';
+      card.onclick = () => openModal(e.date);
+      if (e.image_1) {
+        card.innerHTML = `<img class="library-thumb" src="${e.image_1}" alt="${e.date}" loading="lazy" />
+          <div class="library-date">${formatDateShort(e.date)}</div>`;
+      } else {
+        card.innerHTML = `<div class="library-thumb-placeholder">♡</div>
+          <div class="library-date">${formatDateShort(e.date)}</div>`;
+      }
+      grid.appendChild(card);
+    });
+  }
+
   // ── RENDER CARDS ──
   function buildCards(entry, carouselEl, dotsEl) {
     carouselEl.innerHTML = '';
@@ -661,6 +834,7 @@
 
     const images = [entry.image_1, entry.image_2, entry.image_3, entry.image_4];
     const texts  = [entry.text_1,  entry.text_2,  entry.text_3,  entry.text_4];
+    const audios = [entry.audio_1, entry.audio_2, entry.audio_3, entry.audio_4];
 
     images.forEach((url, i) => {
       const card = document.createElement('div');
@@ -687,6 +861,55 @@
         msg.textContent = texts[i].trim();
         card.appendChild(msg);
       }
+
+      // Card footer — play button (left) + heart button (right)
+      const footer = document.createElement('div');
+      footer.className = 'card-footer';
+
+      // Play button (only if audio exists)
+      const audioUrl = [entry.audio_1, entry.audio_2, entry.audio_3, entry.audio_4][i];
+      if (audioUrl) {
+        const audio = new Audio(audioUrl);
+        const playBtn = document.createElement('button');
+        playBtn.className = 'play-btn';
+        playBtn.title = 'Play voice note';
+        playBtn.textContent = '▶';
+        playBtn.onclick = (e) => {
+          e.stopPropagation();
+          if (audio.paused) {
+            // Stop any other playing audio
+            document.querySelectorAll('audio').forEach(a => a.pause());
+            document.querySelectorAll('.play-btn').forEach(b => { b.textContent = '▶'; b.classList.remove('playing'); });
+            audio.play();
+            playBtn.textContent = '⏸';
+            playBtn.classList.add('playing');
+            audio.onended = () => { playBtn.textContent = '▶'; playBtn.classList.remove('playing'); };
+          } else {
+            audio.pause();
+            playBtn.textContent = '▶';
+            playBtn.classList.remove('playing');
+          }
+        };
+        footer.appendChild(playBtn);
+      } else {
+        // Empty spacer so heart stays right-aligned
+        const spacer = document.createElement('span');
+        footer.appendChild(spacer);
+      }
+
+      // Heart button (right)
+      const favBtn = document.createElement('button');
+      const alreadyFav = isFav(entry.date, i);
+      favBtn.className = 'fav-btn' + (alreadyFav ? ' active' : '');
+      favBtn.textContent = alreadyFav ? '♥' : '♡';
+      favBtn.title = 'Save to favourites';
+      favBtn.onclick = (e) => {
+        e.stopPropagation();
+        toggleFav(entry.date, i, favBtn);
+      };
+      footer.appendChild(favBtn);
+
+      card.appendChild(footer);
 
       carouselEl.appendChild(card);
 
@@ -734,30 +957,8 @@
   // ── LOAD LIBRARY ──
   async function loadLibrary() {
     const entries = await fetchLibrary();
-    const grid = document.getElementById('libraryGrid');
-    const today = todayKey();
-    const past = entries.filter(e => e.date !== today);
-
-    document.getElementById('libraryCount').textContent = past.length > 0 ? `${past.length} days` : '';
-
-    if (past.length === 0) {
-      grid.innerHTML = `<p style="grid-column:span 2; color:var(--soft-graphite); font-size:0.82rem; text-align:center; padding:20px 0;">Your library will grow here every day ♡</p>`;
-      return;
-    }
-
-    past.forEach(e => {
-      const card = document.createElement('div');
-      card.className = 'library-entry';
-      card.onclick = () => openModal(e.date);
-      if (e.image_1) {
-        card.innerHTML = `<img class="library-thumb" src="${e.image_1}" alt="${e.date}" loading="lazy" />
-          <div class="library-date">${formatDateShort(e.date)}</div>`;
-      } else {
-        card.innerHTML = `<div class="library-thumb-placeholder">♡</div>
-          <div class="library-date">${formatDateShort(e.date)}</div>`;
-      }
-      grid.appendChild(card);
-    });
+    allEntries = entries;
+    renderLibrary();
   }
 
   // ── MODAL ──
