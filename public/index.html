@@ -675,6 +675,13 @@
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-date" id="modalDate"></div>
     <div class="heart-divider" style="margin: 8px 0 16px;"><span>♡</span></div>
+    <div class="sticky-section" id="modalStickySection" style="display:none; padding: 0 24px 16px;">
+      <div class="sticky-note">
+        <div class="sticky-lines"></div>
+        <div class="sticky-note-text" id="modalStickyText"></div>
+        <div class="sticky-note-sig">— Jeff ♡</div>
+      </div>
+    </div>
     <div class="carousel" id="modalCarousel"></div>
     <div class="dots" id="modalDots" style="margin-top:4px;"></div>
   </div>
@@ -993,6 +1000,44 @@
     const entry = await fetchDay(dateKey);
     if (!entry) return;
     document.getElementById('modalDate').textContent = formatDate(dateKey);
+
+    // Sticky note for this past day
+    const stickySection = document.getElementById('modalStickySection');
+    const stickyNoteEl = stickySection.querySelector('.sticky-note');
+    // remove any old play button before rebuilding
+    const oldPlayBtn = stickyNoteEl.querySelector('.play-btn');
+    if (oldPlayBtn) oldPlayBtn.remove();
+
+    if (entry.love_note || entry.audio_love_note) {
+      document.getElementById('modalStickyText').textContent = entry.love_note ? entry.love_note.trim() : '';
+      if (entry.audio_love_note) {
+        const audio = new Audio(entry.audio_love_note);
+        const playBtn = document.createElement('button');
+        playBtn.className = 'play-btn';
+        playBtn.style.cssText = 'position:absolute; bottom:12px; left:14px; font-size:1rem;';
+        playBtn.textContent = '▶';
+        playBtn.title = 'Hear Jeff read this note';
+        playBtn.onclick = () => {
+          if (audio.paused) {
+            document.querySelectorAll('audio').forEach(a => a.pause());
+            document.querySelectorAll('.play-btn').forEach(b => { b.textContent = '▶'; b.classList.remove('playing'); });
+            audio.play();
+            playBtn.textContent = '⏸';
+            playBtn.classList.add('playing');
+            audio.onended = () => { playBtn.textContent = '▶'; playBtn.classList.remove('playing'); };
+          } else {
+            audio.pause();
+            playBtn.textContent = '▶';
+            playBtn.classList.remove('playing');
+          }
+        };
+        stickyNoteEl.appendChild(playBtn);
+      }
+      stickySection.style.display = 'block';
+    } else {
+      stickySection.style.display = 'none';
+    }
+
     const carousel = document.getElementById('modalCarousel');
     const dots = document.getElementById('modalDots');
     buildCards(entry, carousel, dots);
@@ -1002,6 +1047,7 @@
 
   function closeModal(e) {
     if (e && e.target !== document.getElementById('modal') && e.type === 'click') return;
+    document.querySelectorAll('audio').forEach(a => a.pause());
     document.getElementById('modal').style.display = 'none';
     document.body.style.overflow = '';
   }
