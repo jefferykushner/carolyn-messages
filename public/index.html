@@ -275,6 +275,86 @@
     .fav-btn:active { transform: scale(1.3); }
     .fav-btn.active { color: var(--deep-rose); }
 
+    /* ── NOTE LIGHTBOX (full-screen love note) ── */
+    .note-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: linear-gradient(160deg, #fffdf6 0%, #fdf0e6 100%);
+      display: flex;
+      flex-direction: column;
+      animation: lbIn 0.2s ease;
+    }
+
+    .note-lightbox-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(201, 96, 111, 0.1);
+      border: 1.5px solid var(--blush);
+      color: var(--deep-rose);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+      z-index: 2;
+    }
+    .note-lightbox-close:hover { background: rgba(201, 96, 111, 0.2); }
+
+    .note-lightbox-eyebrow {
+      text-align: center;
+      padding: 28px 24px 4px;
+      font-size: 0.68rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--rose);
+      flex-shrink: 0;
+    }
+
+    .note-lightbox-scroll {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 28px;
+    }
+
+    .note-lightbox-text {
+      margin: auto 0;
+      font-family: 'Caveat', cursive;
+      font-size: 1.7rem;
+      font-weight: 400;
+      color: #4a3c30;
+      line-height: 1.6;
+      text-align: center;
+      white-space: pre-wrap;
+      max-width: 560px;
+      align-self: center;
+      width: 100%;
+    }
+
+    .note-lightbox-sig {
+      text-align: right;
+      padding: 8px 32px 36px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--deep-rose);
+      flex-shrink: 0;
+      max-width: 560px;
+      align-self: center;
+      width: 100%;
+    }
+
+    .note-card-body { cursor: zoom-in; }
+
     /* ── LIGHTBOX ── */
     .lightbox {
       position: fixed;
@@ -629,6 +709,16 @@
   <img id="lightboxImg" src="" alt="" />
 </div>
 
+<!-- Note lightbox (full-screen love note) -->
+<div class="note-lightbox" id="noteLightbox" style="display:none">
+  <button class="note-lightbox-close" onclick="closeNoteLightbox()">✕</button>
+  <div class="note-lightbox-eyebrow">A note from Jeff ♡</div>
+  <div class="note-lightbox-scroll">
+    <div class="note-lightbox-text" id="noteLightboxText"></div>
+  </div>
+  <div class="note-lightbox-sig">— Jeff</div>
+</div>
+
 <!-- Modal for past days -->
 <div class="modal-overlay" id="modal" style="display:none" onclick="closeModal(event)">
   <div class="modal-sheet">
@@ -703,9 +793,25 @@
     document.body.style.overflow = '';
   }
 
+  // ── NOTE LIGHTBOX ──
+  function openNoteLightbox(text) {
+    document.getElementById('noteLightboxText').textContent = text;
+    document.getElementById('noteLightbox').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeNoteLightbox() {
+    document.getElementById('noteLightbox').style.display = 'none';
+    // Restore scroll only if the day-modal isn't open behind it
+    if (document.getElementById('modal').style.display !== 'flex') {
+      document.body.style.overflow = '';
+    }
+  }
+
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       document.getElementById('lightbox').style.display = 'none';
+      document.getElementById('noteLightbox').style.display = 'none';
       document.getElementById('modal').style.display = 'none';
       document.body.style.overflow = '';
     }
@@ -817,6 +923,10 @@
 
       const body = document.createElement('div');
       body.className = 'note-card-body';
+      if (entry.love_note && entry.love_note.trim()) {
+        body.onclick = () => openNoteLightbox(entry.love_note.trim());
+        body.title = 'Tap to read full screen';
+      }
 
       const eyebrow = document.createElement('div');
       eyebrow.className = 'note-eyebrow';
