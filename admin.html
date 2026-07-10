@@ -27,56 +27,55 @@
       background: #f5f0f1;
       color: var(--graphite);
       min-height: 100vh;
-      padding: 40px 20px 80px;
+      padding: 28px 16px 80px;
     }
 
-    .container { max-width: 680px; margin: 0 auto; }
+    .container { max-width: 640px; margin: 0 auto; }
 
     header {
-      margin-bottom: 32px;
-      padding-bottom: 24px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
       border-bottom: 1px solid var(--blush);
     }
 
     header h1 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem;
+      font-size: 1.6rem;
       font-weight: 300;
       color: var(--deep-rose);
     }
 
-    header p {
-      font-size: 0.85rem;
-      color: var(--soft-graphite);
-      margin-top: 4px;
-    }
-
-    /* DATE PICKER */
-    .field-group {
+    /* DATE */
+    .date-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       background: var(--warm-white);
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 20px;
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
       box-shadow: 0 2px 12px rgba(200,100,110,0.07);
     }
 
-    .field-group label {
-      display: block;
-      font-size: 0.72rem;
+    .date-row label {
+      font-size: 0.68rem;
       font-weight: 700;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--soft-graphite);
-      margin-bottom: 10px;
+      white-space: nowrap;
     }
 
     input[type="date"] {
-      width: 100%;
-      padding: 10px 14px;
+      flex: 1;
+      padding: 8px 12px;
       border: 1.5px solid var(--blush);
-      border-radius: 10px;
+      border-radius: 9px;
       font-family: 'Lato', sans-serif;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: var(--graphite);
       background: var(--cream);
       outline: none;
@@ -84,44 +83,28 @@
     }
     input[type="date"]:focus { border-color: var(--rose); }
 
-    /* IMAGE UPLOAD SLOTS */
-    .uploads-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    @media (max-width: 480px) {
-      .uploads-grid { grid-template-columns: 1fr; }
-    }
-
-    .upload-slot {
+    /* ── SLOT ROWS ── */
+    .slot-row {
       background: var(--warm-white);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
       box-shadow: 0 2px 12px rgba(200,100,110,0.07);
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 12px;
     }
 
-    .upload-slot .slot-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--deep-rose);
-      margin-bottom: 4px;
+    .slot-row.note-row {
+      border-left: 3px solid var(--rose);
     }
 
-    .upload-slot .slot-desc {
-      font-size: 0.78rem;
-      color: var(--soft-graphite);
-      margin-bottom: 14px;
-      line-height: 1.4;
-    }
-
+    /* image drop zone — compact */
     .drop-zone {
+      width: 96px;
+      height: 96px;
       border: 2px dashed var(--blush);
-      border-radius: 12px;
-      aspect-ratio: 1/1;
+      border-radius: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -132,7 +115,7 @@
       position: relative;
       background: var(--cream);
     }
-    .drop-zone:hover { border-color: var(--rose); background: #fde8ed; }
+    .drop-zone:hover, .drop-zone:focus { border-color: var(--rose); background: #fde8ed; outline: none; }
     .drop-zone.has-image { border-style: solid; border-color: var(--rose); }
 
     .drop-zone input[type="file"] {
@@ -155,53 +138,148 @@
       text-align: center;
       color: var(--soft-graphite);
       z-index: 0;
+      font-size: 0.6rem;
+      line-height: 1.4;
+      padding: 4px;
     }
-    .drop-zone .drop-hint .icon { font-size: 1.8rem; margin-bottom: 6px; }
-    .drop-zone .drop-hint p { font-size: 0.75rem; line-height: 1.4; }
+    .drop-zone .drop-hint .icon { font-size: 1.2rem; display: block; margin-bottom: 2px; }
 
     .drop-zone .clear-btn {
       position: absolute;
-      top: 8px; right: 8px;
+      top: 4px; right: 4px;
       z-index: 3;
       background: rgba(255,255,255,0.9);
       border: 1px solid var(--rose);
       border-radius: 50%;
-      width: 26px; height: 26px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.75rem;
+      width: 22px; height: 22px;
+      align-items: center; justify-content: center;
+      font-size: 0.65rem;
       cursor: pointer;
       color: var(--deep-rose);
       display: none;
     }
     .drop-zone.has-image .clear-btn { display: flex; }
 
-    /* message textarea */
+    /* note icon box (love note row) */
+    .note-icon-box {
+      width: 96px;
+      height: 96px;
+      border-radius: 10px;
+      background: linear-gradient(160deg, #fffdf6, #fdf4ec);
+      border: 1.5px solid var(--blush);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 1.5rem;
+    }
+    .note-icon-box span {
+      font-size: 0.56rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--soft-graphite);
+      text-align: center;
+    }
+
+    /* right column of each row */
+    .slot-right {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
     .slot-textarea {
       width: 100%;
-      margin-top: 12px;
-      padding: 10px 12px;
+      padding: 8px 10px;
       border: 1.5px solid var(--blush);
-      border-radius: 10px;
+      border-radius: 9px;
       font-family: 'Cormorant Garamond', serif;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       color: var(--graphite);
       background: var(--cream);
       resize: vertical;
-      min-height: 72px;
+      min-height: 52px;
       outline: none;
       transition: border-color 0.2s;
-      line-height: 1.5;
+      line-height: 1.45;
+      flex: 1;
     }
     .slot-textarea:focus { border-color: var(--rose); }
     .slot-textarea::placeholder { color: var(--blush); font-style: italic; }
 
-    /* STATUS */
+    /* ── AUDIO RECORDER — compact strip ── */
+    .audio-recorder {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .rec-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: none;
+      border-radius: 16px;
+      padding: 5px 12px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .rec-btn.start { background: var(--rose); color: white; }
+    .rec-btn.start:hover { background: var(--deep-rose); }
+
+    .rec-btn.stop {
+      background: var(--deep-rose);
+      color: white;
+      animation: pulse 1s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201,96,111,0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(201,96,111,0); }
+    }
+
+    .rec-btn.clear {
+      background: none;
+      border: 1px solid var(--blush);
+      color: var(--soft-graphite);
+    }
+    .rec-btn.clear:hover { border-color: var(--rose); color: var(--deep-rose); }
+
+    .rec-timer {
+      font-size: 0.7rem;
+      color: var(--deep-rose);
+      font-weight: 700;
+      min-width: 32px;
+    }
+
+    .rec-status {
+      font-size: 0.68rem;
+      color: var(--soft-graphite);
+      font-style: italic;
+    }
+
+    audio.rec-playback {
+      height: 28px;
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    /* STATUS + PROGRESS */
     .status-bar {
       background: var(--warm-white);
       border-radius: 12px;
-      padding: 14px 18px;
-      margin-bottom: 20px;
-      font-size: 0.83rem;
+      padding: 12px 16px;
+      margin: 14px 0;
+      font-size: 0.82rem;
       display: none;
       align-items: center;
       gap: 10px;
@@ -212,34 +290,12 @@
     .status-bar.error { border-left: 3px solid var(--deep-rose); color: var(--deep-rose); }
     .status-bar.loading { border-left: 3px solid var(--rose); color: var(--soft-graphite); }
 
-    /* SUBMIT */
-    .btn-publish {
-      width: 100%;
-      padding: 16px;
-      background: var(--rose);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-      margin-top: 8px;
-    }
-    .btn-publish:hover { background: var(--deep-rose); }
-    .btn-publish:active { transform: scale(0.99); }
-    .btn-publish:disabled { background: var(--blush); cursor: not-allowed; }
-
-    /* PROGRESS */
     .progress-wrap {
       height: 4px;
       background: var(--blush);
       border-radius: 2px;
       overflow: hidden;
-      margin-bottom: 16px;
+      margin: 14px 0 0;
       display: none;
     }
     .progress-wrap.show { display: block; }
@@ -251,41 +307,61 @@
       width: 0%;
     }
 
+    /* PUBLISH */
+    .btn-publish {
+      width: 100%;
+      padding: 15px;
+      background: var(--rose);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 6px;
+    }
+    .btn-publish:hover { background: var(--deep-rose); }
+    .btn-publish:active { transform: scale(0.99); }
+    .btn-publish:disabled { background: var(--blush); cursor: not-allowed; }
+
     /* RECENT */
-    .recent-section { margin-top: 40px; }
+    .recent-section { margin-top: 32px; }
     .recent-section h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 300;
       color: var(--graphite);
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
-    .recent-list { display: flex; flex-direction: column; gap: 10px; }
+    .recent-list { display: flex; flex-direction: column; gap: 8px; }
     .recent-item {
       background: var(--warm-white);
       border-radius: 12px;
-      padding: 12px 16px;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       box-shadow: 0 1px 8px rgba(200,100,110,0.06);
     }
     .recent-thumb {
-      width: 44px; height: 44px;
+      width: 40px; height: 40px;
       border-radius: 8px;
       object-fit: cover;
       background: var(--cream);
       flex-shrink: 0;
     }
     .recent-info { flex: 1; }
-    .recent-date { font-size: 0.85rem; color: var(--graphite); font-weight: 700; }
-    .recent-sub { font-size: 0.75rem; color: var(--soft-graphite); margin-top: 2px; }
+    .recent-date { font-size: 0.82rem; color: var(--graphite); font-weight: 700; }
     .recent-delete {
       background: none;
       border: 1px solid var(--blush);
       border-radius: 8px;
       padding: 4px 10px;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--soft-graphite);
       cursor: pointer;
       transition: all 0.2s;
@@ -298,19 +374,33 @@
 
   <header>
     <h1>Morning Messages ♡</h1>
-    <p>Upload today's four affirmation images for Carolyn.</p>
   </header>
 
   <!-- Date -->
-  <div class="field-group">
+  <div class="date-row">
     <label>Date</label>
     <input type="date" id="dateInput" />
   </div>
 
-  <!-- Upload slots -->
-  <div class="uploads-grid" id="uploadsGrid">
-    <!-- rendered by JS -->
+  <!-- Love note row (first) -->
+  <div class="slot-row note-row">
+    <div class="note-icon-box">💛<span>Love<br>Note</span></div>
+    <div class="slot-right">
+      <textarea
+        class="slot-textarea"
+        id="love_note"
+        placeholder="Write something from the heart… (optional)"
+      ></textarea>
+      <div class="audio-recorder" id="recorder_audio_love_note">
+        <button class="rec-btn start" onclick="startRecording('audio_love_note')">🎙 Record</button>
+        <span class="rec-timer" id="timer_audio_love_note" style="display:none">0:00</span>
+        <span class="rec-status" id="status_audio_love_note">No voice note</span>
+      </div>
+    </div>
   </div>
+
+  <!-- Image slot rows -->
+  <div id="uploadsGrid"></div>
 
   <!-- Progress + status -->
   <div class="progress-wrap" id="progressWrap">
@@ -318,9 +408,9 @@
   </div>
   <div class="status-bar" id="statusBar"></div>
 
-  <!-- Publish button -->
+  <!-- Publish -->
   <button class="btn-publish" id="publishBtn" onclick="publish()">
-    Publish Today's Messages ♡
+    Publish ♡
   </button>
 
   <!-- Recent entries -->
@@ -337,50 +427,65 @@
   const SUPABASE_URL = 'https://istzagkjchlvjsbrvahm.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzdHphZ2tqY2hsdmpzYnJ2YWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTk4MzgsImV4cCI6MjA5NTg3NTgzOH0.7JeL2ScsjC1hoySuKb6q2omgFkGnGoL8dOPDNRNDezk';
 
+  const CLOUDINARY_CLOUD = 'dbv3ahmxu';
+  const CLOUDINARY_PRESET = 'carolyn_audio';
+
   const SLOTS = [
-    { key: 'image_1', textKey: 'text_1', placeholder: 'Add a note for this image… (optional)' },
-    { key: 'image_2', textKey: 'text_2', placeholder: 'Add a note for this image… (optional)' },
-    { key: 'image_3', textKey: 'text_3', placeholder: 'Add a note for this image… (optional)' },
-    { key: 'image_4', textKey: 'text_4', placeholder: 'Add a note for this image… (optional)' },
+    { key: 'image_1', audioKey: 'audio_1' },
+    { key: 'image_2', audioKey: 'audio_2' },
+    { key: 'image_3', audioKey: 'audio_3' },
+    { key: 'image_4', audioKey: 'audio_4' },
   ];
 
   const files = { image_1: null, image_2: null, image_3: null, image_4: null };
+  const audioBlobs = { audio_1: null, audio_2: null, audio_3: null, audio_4: null, audio_love_note: null };
+  const recorders = {};
+  const recTimers = {};
 
   // ── Set today's date ──
-  const today = new Date().toISOString().slice(0, 10);
-  document.getElementById('dateInput').value = today;
+  document.getElementById('dateInput').value = new Date().toISOString().slice(0, 10);
 
-  // ── Render upload slots ──
+  // ── Render slot rows ──
   const grid = document.getElementById('uploadsGrid');
-  SLOTS.forEach(slot => {
+  SLOTS.forEach((slot, i) => {
     grid.innerHTML += `
-      <div class="upload-slot">
-        <div class="drop-zone" id="zone_${slot.key}">
+      <div class="slot-row">
+        <div class="drop-zone" id="zone_${slot.key}" tabindex="0">
           <input type="file" accept="image/*" onchange="handleFile('${slot.key}', this)" />
           <div class="clear-btn" onclick="clearFile(event,'${slot.key}')">✕</div>
           <div class="drop-hint">
-            <div class="icon">🌸</div>
-            <p>Tap to choose<br>image</p>
+            <span class="icon">🌸</span>
+            ${i + 1} · Tap or<br>click &amp; paste
           </div>
         </div>
-        <textarea
-          class="slot-textarea"
-          id="text_${slot.key}"
-          placeholder="${slot.placeholder}"
-        ></textarea>
+        <div class="slot-right">
+          <textarea
+            class="slot-textarea"
+            id="text_${slot.key}"
+            placeholder="Add a note for this image… (optional)"
+          ></textarea>
+          <div class="audio-recorder" id="recorder_${slot.audioKey}">
+            <button class="rec-btn start" onclick="startRecording('${slot.audioKey}')">🎙 Record</button>
+            <span class="rec-timer" id="timer_${slot.audioKey}" style="display:none">0:00</span>
+            <span class="rec-status" id="status_${slot.audioKey}">No voice note</span>
+          </div>
+        </div>
       </div>`;
   });
 
-  function handleFile(key, input) {
-    const file = input.files[0];
-    if (!file) return;
+  // ── FILE HANDLING ──
+  function applyFileToZone(key, file) {
+    if (!file || !file.type.startsWith('image/')) return;
     files[key] = file;
     const zone = document.getElementById('zone_' + key);
     zone.classList.add('has-image');
-    // show preview
     let img = zone.querySelector('img');
     if (!img) { img = document.createElement('img'); zone.appendChild(img); }
     img.src = URL.createObjectURL(file);
+  }
+
+  function handleFile(key, input) {
+    applyFileToZone(key, input.files[0]);
   }
 
   function clearFile(e, key) {
@@ -390,13 +495,114 @@
     zone.classList.remove('has-image');
     const img = zone.querySelector('img');
     if (img) img.remove();
-    const input = zone.querySelector('input');
-    input.value = '';
+    zone.querySelector('input').value = '';
   }
 
-  // ── Upload to Supabase Storage ──
+  // ── PASTE SUPPORT ──
+  let focusedZoneKey = null;
+
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    const key = zone.id.replace('zone_', '');
+    zone.addEventListener('focus', () => { focusedZoneKey = key; });
+    zone.addEventListener('click', () => { focusedZoneKey = key; zone.focus(); });
+    zone.addEventListener('blur', () => { if (focusedZoneKey === key) focusedZoneKey = null; });
+  });
+
+  document.addEventListener('paste', (e) => {
+    const items = (e.clipboardData || e.originalEvent?.clipboardData)?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (!file) continue;
+        const targetKey = focusedZoneKey || SLOTS.find(s => !files[s.key])?.key;
+        if (targetKey) applyFileToZone(targetKey, file);
+        e.preventDefault();
+        break;
+      }
+    }
+  });
+
+  // ── RECORDING ──
+  async function startRecording(audioKey) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      const chunks = [];
+      recorders[audioKey] = { mediaRecorder, stream };
+
+      mediaRecorder.ondataavailable = e => chunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        const mimeType = mediaRecorder.mimeType || 'audio/webm';
+        const blob = new Blob(chunks, { type: mimeType });
+        audioBlobs[audioKey] = blob;
+        stream.getTracks().forEach(t => t.stop());
+
+        const recEl = document.getElementById('recorder_' + audioKey);
+        let player = recEl.querySelector('audio');
+        if (!player) {
+          player = document.createElement('audio');
+          player.className = 'rec-playback';
+          player.controls = true;
+          recEl.appendChild(player);
+        }
+        player.src = URL.createObjectURL(blob);
+        player.load();
+
+        document.getElementById('status_' + audioKey).textContent = 'Voice note ready ✓';
+        document.getElementById('timer_' + audioKey).style.display = 'none';
+
+        const startBtn = recEl.querySelector('.rec-btn.stop');
+        if (startBtn) {
+          startBtn.className = 'rec-btn clear';
+          startBtn.textContent = '✕ Clear';
+          startBtn.onclick = () => clearRecording(audioKey);
+        }
+      };
+
+      mediaRecorder.start();
+
+      const recEl = document.getElementById('recorder_' + audioKey);
+      const btn = recEl.querySelector('.rec-btn');
+      btn.className = 'rec-btn stop';
+      btn.textContent = '⏹ Stop';
+      btn.onclick = () => stopRecording(audioKey);
+
+      let secs = 0;
+      const timerEl = document.getElementById('timer_' + audioKey);
+      timerEl.style.display = 'inline';
+      recTimers[audioKey] = setInterval(() => {
+        secs++;
+        const m = Math.floor(secs / 60);
+        const s = String(secs % 60).padStart(2, '0');
+        timerEl.textContent = `${m}:${s}`;
+      }, 1000);
+
+    } catch (err) {
+      alert('Microphone access denied. Please allow microphone in your browser settings.');
+    }
+  }
+
+  function stopRecording(audioKey) {
+    clearInterval(recTimers[audioKey]);
+    if (recorders[audioKey]) recorders[audioKey].mediaRecorder.stop();
+  }
+
+  function clearRecording(audioKey) {
+    audioBlobs[audioKey] = null;
+    const recEl = document.getElementById('recorder_' + audioKey);
+    const player = recEl.querySelector('audio');
+    if (player) player.remove();
+    document.getElementById('status_' + audioKey).textContent = 'No voice note';
+    const btn = recEl.querySelector('.rec-btn');
+    btn.className = 'rec-btn start';
+    btn.textContent = '🎙 Record';
+    btn.onclick = () => startRecording(audioKey);
+  }
+
+  // ── UPLOADS ──
   async function uploadImage(file, dateKey, slot) {
-    const ext = file.name.split('.').pop();
+    const ext = file.name ? file.name.split('.').pop() : 'png';
     const path = `${dateKey}/${slot}.${ext}`;
     const res = await fetch(
       `${SUPABASE_URL}/storage/v1/object/affirmation-images/${path}`,
@@ -415,13 +621,31 @@
     return `${SUPABASE_URL}/storage/v1/object/public/affirmation-images/${path}`;
   }
 
-  // ── Publish ──
+  async function uploadAudio(blob, dateKey, audioKey) {
+    const ext = blob.type.includes('ogg') ? 'ogg' : blob.type.includes('mp4') ? 'mp4' : 'webm';
+    const formData = new FormData();
+    formData.append('file', blob, `${dateKey}_${audioKey}.${ext}`);
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+    formData.append('folder', 'carolyn-audio');
+    formData.append('resource_type', 'video');
+
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/video/upload`,
+      { method: 'POST', body: formData }
+    );
+    if (!res.ok) throw new Error(`Audio upload failed for ${audioKey}`);
+    const data = await res.json();
+    return data.secure_url;
+  }
+
+  // ── PUBLISH ──
   async function publish() {
     const dateKey = document.getElementById('dateInput').value;
     if (!dateKey) return showStatus('Please choose a date.', 'error');
 
-    const hasAny = Object.values(files).some(f => f !== null);
-    if (!hasAny) return showStatus('Please add at least one image.', 'error');
+    const hasAnyImage = Object.values(files).some(f => f !== null);
+    const hasNote = document.getElementById('love_note').value.trim() || audioBlobs['audio_love_note'];
+    if (!hasAnyImage && !hasNote) return showStatus('Please add at least one image or note.', 'error');
 
     const btn = document.getElementById('publishBtn');
     btn.disabled = true;
@@ -430,19 +654,24 @@
 
     try {
       const urls = {};
-      const keys = Object.keys(files);
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        if (files[key]) {
-          urls[key] = await uploadImage(files[key], dateKey, key);
-        }
-        showProgress(20 + (i + 1) * 18);
+      const imageKeys = Object.keys(files);
+      for (let i = 0; i < imageKeys.length; i++) {
+        const key = imageKeys[i];
+        if (files[key]) urls[key] = await uploadImage(files[key], dateKey, key);
+        showProgress(10 + (i + 1) * 12);
+      }
+
+      showStatus('Uploading voice notes…', 'loading');
+      const audioKeys = Object.keys(audioBlobs);
+      for (let i = 0; i < audioKeys.length; i++) {
+        const key = audioKeys[i];
+        if (audioBlobs[key]) urls[key] = await uploadAudio(audioBlobs[key], dateKey, key);
+        showProgress(60 + (i + 1) * 6);
       }
 
       showProgress(90);
       showStatus('Saving…', 'loading');
 
-      // Upsert row in affirmations table
       const res = await fetch(`${SUPABASE_URL}/rest/v1/affirmations`, {
         method: 'POST',
         headers: {
@@ -458,13 +687,15 @@
           text_2: document.getElementById('text_image_2')?.value.trim() || null,
           text_3: document.getElementById('text_image_3')?.value.trim() || null,
           text_4: document.getElementById('text_image_4')?.value.trim() || null,
+          love_note: document.getElementById('love_note')?.value.trim() || null,
+          audio_love_note: urls['audio_love_note'] || null,
         })
       });
 
       if (!res.ok) throw new Error('Database save failed');
 
       showProgress(100);
-      showStatus("✓ Published! Carolyn's morning is ready ♡", 'success');
+      showStatus("✓ Published! Her morning is ready ♡", 'success');
       loadRecent();
     } catch (err) {
       showStatus('Error: ' + err.message, 'error');
@@ -489,7 +720,7 @@
     document.getElementById('progressBar').style.width = '0%';
   }
 
-  // ── Load recent ──
+  // ── RECENT ──
   async function loadRecent() {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/affirmations?select=date,image_1&order=date.desc&limit=10`,
@@ -508,7 +739,6 @@
         ${r.image_1 ? `<img class="recent-thumb" src="${r.image_1}" />` : '<div class="recent-thumb"></div>'}
         <div class="recent-info">
           <div class="recent-date">${r.date}</div>
-          <div class="recent-sub">4 images published</div>
         </div>
         <button class="recent-delete" onclick="deleteEntry('${r.date}')">Remove</button>
       </div>
