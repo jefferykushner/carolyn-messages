@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#fdf0f3" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="apple-touch-icon" href="/icon-192.png" />
-  <title>Good Morning, Carolyn ♡</title>
+  <title>Good Morning ♡</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,9 +24,6 @@
       --warm-white: #fffaf8;
       --graphite: #5a4a4e;
       --soft-graphite: #8a7a7e;
-      --gold: #d4a96a;
-      --sticky: #fef08a;
-      --sticky-shadow: #e6d44a;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -92,79 +89,8 @@
     }
     .heart-divider span { color: var(--rose); font-size: 0.85rem; }
 
-    /* ── STICKY NOTE ── */
-    .sticky-section {
-      padding: 0 24px 8px;
-    }
-
-    .sticky-note {
-      background: var(--sticky);
-      border-radius: 4px 4px 4px 4px;
-      padding: 20px 22px 24px;
-      position: relative;
-      box-shadow:
-        0 4px 6px rgba(0,0,0,0.08),
-        0 8px 24px rgba(0,0,0,0.06),
-        2px 2px 0 var(--sticky-shadow) inset;
-      transform: rotate(-1deg);
-      animation: stickyIn 0.5s cubic-bezier(0.34,1.26,0.64,1) both;
-    }
-
-    @keyframes stickyIn {
-      from { opacity: 0; transform: rotate(-1deg) translateY(12px); }
-      to   { opacity: 1; transform: rotate(-1deg) translateY(0); }
-    }
-
-    /* tape strip at top */
-    .sticky-note::before {
-      content: '';
-      position: absolute;
-      top: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 48px;
-      height: 20px;
-      background: rgba(255,255,255,0.55);
-      border-radius: 3px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .sticky-note-text {
-      font-family: 'Caveat', cursive;
-      font-size: 1.25rem;
-      font-weight: 400;
-      color: #3a3000;
-      line-height: 1.7;
-      white-space: pre-wrap;
-    }
-
-    .sticky-note-sig {
-      margin-top: 14px;
-      font-family: 'Caveat', cursive;
-      font-size: 1.05rem;
-      font-weight: 500;
-      color: #7a6000;
-      text-align: right;
-    }
-
-    /* ruled lines on sticky */
-    .sticky-lines {
-      position: absolute;
-      inset: 44px 0 12px;
-      background-image: repeating-linear-gradient(
-        transparent,
-        transparent 31px,
-        rgba(180,160,0,0.18) 31px,
-        rgba(180,160,0,0.18) 32px
-      );
-      pointer-events: none;
-      border-radius: 0 0 4px 4px;
-    }
-
     /* ── CARD CAROUSEL ── */
-    .card-section {
-      padding: 0 0 32px;
-    }
+    .card-section { padding: 0 0 32px; }
 
     .section-label {
       text-align: center;
@@ -176,10 +102,7 @@
       margin-bottom: 16px;
     }
 
-    .carousel-wrapper {
-      position: relative;
-      overflow: hidden;
-    }
+    .carousel-wrapper { position: relative; overflow: hidden; }
 
     .carousel {
       display: flex;
@@ -202,17 +125,20 @@
       box-shadow: 0 4px 24px rgba(200, 100, 110, 0.12);
       position: relative;
       animation: cardIn 0.5s ease both;
+      display: flex;
+      flex-direction: column;
     }
     .card:nth-child(2) { animation-delay: 0.08s; }
     .card:nth-child(3) { animation-delay: 0.16s; }
     .card:nth-child(4) { animation-delay: 0.24s; }
+    .card:nth-child(5) { animation-delay: 0.32s; }
 
     @keyframes cardIn {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .card img {
+    .card img.card-image {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
@@ -241,7 +167,7 @@
 
     /* text beneath card image */
     .card-message {
-      padding: 16px 18px 20px;
+      padding: 16px 18px 18px;
       font-family: 'Cormorant Garamond', serif;
       font-size: 1rem;
       font-weight: 300;
@@ -252,16 +178,57 @@
       border-top: 1px solid var(--blush);
     }
 
-    /* ── FAVOURITE HEART BUTTON ── */
+    /* ── LOVE NOTE CARD (first in deck) ── */
+    .note-card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 28px 26px 20px;
+      background:
+        linear-gradient(160deg, #fffdf6 0%, #fdf4ec 100%);
+      min-height: 300px;
+    }
+
+    .note-eyebrow {
+      font-size: 0.64rem;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--rose);
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .note-text {
+      font-family: 'Caveat', cursive;
+      font-size: 1.45rem;
+      font-weight: 400;
+      color: #4a3c30;
+      line-height: 1.55;
+      text-align: center;
+      white-space: pre-wrap;
+    }
+
+    .note-sig {
+      margin-top: 20px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--deep-rose);
+      text-align: right;
+    }
+
+    /* ── CARD FOOTER (play + heart) ── */
     .card-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 8px 12px;
       border-top: 1px solid var(--blush);
+      margin-top: auto;
     }
 
-    /* ── PLAY BUTTON ── */
     .play-btn {
       background: none;
       border: none;
@@ -289,47 +256,6 @@
     }
     .fav-btn:active { transform: scale(1.3); }
     .fav-btn.active { color: var(--deep-rose); }
-
-    /* ── LIBRARY TABS ── */
-    .library-tabs {
-      display: flex;
-      gap: 0;
-      margin-bottom: 20px;
-      background: var(--warm-white);
-      border-radius: 12px;
-      padding: 4px;
-      box-shadow: 0 1px 8px rgba(200,100,110,0.07);
-    }
-
-    .lib-tab {
-      flex: 1;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 9px;
-      background: none;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--soft-graphite);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .lib-tab.active {
-      background: var(--rose);
-      color: white;
-    }
-
-    .fav-empty {
-      grid-column: span 2;
-      text-align: center;
-      padding: 32px 16px;
-      color: var(--soft-graphite);
-      font-size: 0.85rem;
-      line-height: 1.6;
-    }
-    .fav-empty .icon { font-size: 2rem; margin-bottom: 8px; }
 
     /* ── LIGHTBOX ── */
     .lightbox {
@@ -394,10 +320,7 @@
     }
 
     /* ── LOADING / EMPTY ── */
-    .loading-state {
-      text-align: center;
-      padding: 60px 24px;
-    }
+    .loading-state { text-align: center; padding: 60px 24px; }
     .loading-state .spinner {
       width: 36px; height: 36px;
       border: 3px solid var(--blush);
@@ -408,10 +331,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .empty-state {
-      text-align: center;
-      padding: 60px 24px;
-    }
+    .empty-state { text-align: center; padding: 60px 24px; }
     .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
     .empty-state h3 {
       font-family: 'Cormorant Garamond', serif;
@@ -426,9 +346,9 @@
       line-height: 1.6;
     }
 
-    /* ── SUBSCRIBE BUTTON ── */
+    /* ── SUBSCRIBE BAR ── */
     .notify-bar {
-      margin: 0 24px 32px;
+      margin: 0 24px 28px;
       background: linear-gradient(135deg, #fff0f3, #fde8ed);
       border: 1px solid var(--blush);
       border-radius: 16px;
@@ -461,8 +381,6 @@
       padding: 10px 22px;
       font-size: 0.82rem;
       font-family: 'Lato', sans-serif;
-      font-weight: 400;
-      letter-spacing: 0.06em;
       cursor: pointer;
       transition: background 0.2s, transform 0.15s;
     }
@@ -479,15 +397,13 @@
     }
 
     /* ── LIBRARY ── */
-    .library-section {
-      padding: 0 24px 48px;
-    }
+    .library-section { padding: 0 24px 48px; }
 
     .library-header {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .library-title {
@@ -502,6 +418,42 @@
       color: var(--soft-graphite);
       letter-spacing: 0.1em;
     }
+
+    .library-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 20px;
+      background: var(--warm-white);
+      border-radius: 12px;
+      padding: 4px;
+      box-shadow: 0 1px 8px rgba(200,100,110,0.07);
+    }
+
+    .lib-tab {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 9px;
+      background: none;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--soft-graphite);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lib-tab.active { background: var(--rose); color: white; }
+
+    .fav-empty {
+      grid-column: span 2;
+      text-align: center;
+      padding: 32px 16px;
+      color: var(--soft-graphite);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .fav-empty .icon { font-size: 2rem; margin-bottom: 8px; }
 
     .library-grid {
       display: grid;
@@ -612,7 +564,7 @@
 
 <header>
   <div class="header-petal"></div>
-  <div class="greeting">Good morning,<br><em>Carolyn</em> ♡</div>
+  <div class="greeting">Good morning,<br><em id="nickname">love</em> ♡</div>
   <div class="date-display" id="dateDisplay">—</div>
   <div class="heart-divider"><span>♡</span></div>
 </header>
@@ -624,18 +576,9 @@
   <button class="btn-notify" onclick="requestNotification()">🔔 Turn on morning messages</button>
 </div>
 
-<!-- Sticky note from Jeff -->
-<div class="sticky-section" id="stickySection" style="display:none">
-  <div class="sticky-note">
-    <div class="sticky-lines"></div>
-    <div class="sticky-note-text" id="stickyText"></div>
-    <div class="sticky-note-sig">— Jeff ♡</div>
-  </div>
-</div>
-
 <!-- Today's cards -->
-<div class="card-section" style="margin-top: 32px;">
-  <div class="section-label">Today's Affirmations</div>
+<div class="card-section">
+  <div class="section-label">Today's Messages</div>
   <div class="carousel-wrapper">
     <div class="carousel" id="todayCarousel">
       <div class="loading-state" style="flex: 0 0 100%; text-align:center; padding: 60px 0;">
@@ -675,13 +618,6 @@
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-date" id="modalDate"></div>
     <div class="heart-divider" style="margin: 8px 0 16px;"><span>♡</span></div>
-    <div class="sticky-section" id="modalStickySection" style="display:none; padding: 0 24px 16px;">
-      <div class="sticky-note">
-        <div class="sticky-lines"></div>
-        <div class="sticky-note-text" id="modalStickyText"></div>
-        <div class="sticky-note-sig">— Jeff ♡</div>
-      </div>
-    </div>
     <div class="carousel" id="modalCarousel"></div>
     <div class="dots" id="modalDots" style="margin-top:4px;"></div>
   </div>
@@ -690,6 +626,19 @@
 <script>
   const SUPABASE_URL = 'https://istzagkjchlvjsbrvahm.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzdHphZ2tqY2hsdmpzYnJ2YWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTk4MzgsImV4cCI6MjA5NTg3NTgzOH0.7JeL2ScsjC1hoySuKb6q2omgFkGnGoL8dOPDNRNDezk';
+
+  // ── NICKNAME ROTATION ──
+  const NICKNAMES = ['Angel', 'Sweetheart', 'Sweets', 'Bun-Bun', 'Love'];
+
+  function nicknameForToday() {
+    // Seeded by date so it stays stable all day but changes day to day
+    const key = todayKey();
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+      hash = ((hash * 31) + key.charCodeAt(i)) >>> 0;
+    }
+    return NICKNAMES[hash % NICKNAMES.length];
+  }
 
   function todayKey() {
     return new Date().toISOString().slice(0, 10);
@@ -716,7 +665,7 @@
 
   async function fetchLibrary() {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/affirmations?select=date,image_1&order=date.desc&limit=50`,
+      `${SUPABASE_URL}/rest/v1/affirmations?select=date,image_1&order=date.desc&limit=100`,
       { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
     );
     return await res.json();
@@ -767,7 +716,6 @@
       favs[dateKey].push(idx);
       btn.textContent = '♥';
       btn.classList.add('active');
-      // little pop animation
       btn.style.transform = 'scale(1.4)';
       setTimeout(() => btn.style.transform = '', 250);
     } else {
@@ -777,11 +725,190 @@
       btn.classList.remove('active');
     }
     saveFavs(favs);
+    if (currentTab === 'favs') renderLibrary();
   }
 
-  // ── TABS ──
+  // ── AUDIO PLAY HELPER ──
+  function makePlayButton(audioUrl) {
+    const audio = new Audio(audioUrl);
+    const playBtn = document.createElement('button');
+    playBtn.className = 'play-btn';
+    playBtn.title = 'Play voice note';
+    playBtn.textContent = '▶';
+    playBtn.onclick = (e) => {
+      e.stopPropagation();
+      if (audio.paused) {
+        activeAudios.forEach(a => a.pause());
+        document.querySelectorAll('.play-btn').forEach(b => { b.textContent = '▶'; b.classList.remove('playing'); });
+        audio.play();
+        playBtn.textContent = '⏸';
+        playBtn.classList.add('playing');
+        audio.onended = () => { playBtn.textContent = '▶'; playBtn.classList.remove('playing'); };
+      } else {
+        audio.pause();
+        playBtn.textContent = '▶';
+        playBtn.classList.remove('playing');
+      }
+    };
+    activeAudios.push(audio);
+    return playBtn;
+  }
+
+  let activeAudios = [];
+
+  function stopAllAudio() {
+    activeAudios.forEach(a => a.pause());
+    document.querySelectorAll('.play-btn').forEach(b => { b.textContent = '▶'; b.classList.remove('playing'); });
+  }
+
+  // ── CARD FOOTER BUILDER ──
+  function makeFooter(entry, favIdx, audioUrl) {
+    const footer = document.createElement('div');
+    footer.className = 'card-footer';
+
+    if (audioUrl) {
+      footer.appendChild(makePlayButton(audioUrl));
+    } else {
+      footer.appendChild(document.createElement('span'));
+    }
+
+    const favBtn = document.createElement('button');
+    const alreadyFav = isFav(entry.date, favIdx);
+    favBtn.className = 'fav-btn' + (alreadyFav ? ' active' : '');
+    favBtn.textContent = alreadyFav ? '♥' : '♡';
+    favBtn.title = 'Save to favourites';
+    favBtn.onclick = (e) => {
+      e.stopPropagation();
+      toggleFav(entry.date, favIdx, favBtn);
+    };
+    footer.appendChild(favBtn);
+    return footer;
+  }
+
+  // ── RENDER CARDS (love note first, then images) ──
+  function buildCards(entry, carouselEl, dotsEl) {
+    carouselEl.innerHTML = '';
+    dotsEl.innerHTML = '';
+
+    const cards = [];
+
+    // Love note card first (if present)
+    if ((entry.love_note && entry.love_note.trim()) || entry.audio_love_note) {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const body = document.createElement('div');
+      body.className = 'note-card-body';
+
+      const eyebrow = document.createElement('div');
+      eyebrow.className = 'note-eyebrow';
+      eyebrow.textContent = 'A note from Jeff ♡';
+      body.appendChild(eyebrow);
+
+      if (entry.love_note && entry.love_note.trim()) {
+        const text = document.createElement('div');
+        text.className = 'note-text';
+        text.textContent = entry.love_note.trim();
+        body.appendChild(text);
+      }
+
+      const sig = document.createElement('div');
+      sig.className = 'note-sig';
+      sig.textContent = '— Jeff';
+      body.appendChild(sig);
+
+      card.appendChild(body);
+      card.appendChild(makeFooter(entry, 4, entry.audio_love_note));
+      cards.push(card);
+    }
+
+    // Image cards
+    const images = [entry.image_1, entry.image_2, entry.image_3, entry.image_4];
+    const texts  = [entry.text_1,  entry.text_2,  entry.text_3,  entry.text_4];
+    const audios = [entry.audio_1, entry.audio_2, entry.audio_3, entry.audio_4];
+
+    images.forEach((url, i) => {
+      // Skip completely empty slots
+      if (!url && !texts[i] && !audios[i]) return;
+
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      if (url) {
+        const img = document.createElement('img');
+        img.className = 'card-image';
+        img.src = url;
+        img.alt = 'Affirmation';
+        img.loading = 'lazy';
+        img.onclick = () => openLightbox(url);
+        card.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'card-placeholder';
+        ph.innerHTML = '<span>♡</span><p>Coming soon</p>';
+        card.appendChild(ph);
+      }
+
+      if (texts[i] && texts[i].trim()) {
+        const msg = document.createElement('div');
+        msg.className = 'card-message';
+        msg.textContent = texts[i].trim();
+        card.appendChild(msg);
+      }
+
+      card.appendChild(makeFooter(entry, i, audios[i]));
+      cards.push(card);
+    });
+
+    // Attach cards with stagger + dots
+    cards.forEach((card, i) => {
+      card.style.animationDelay = (i * 0.08) + 's';
+      carouselEl.appendChild(card);
+
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.onclick = () => {
+        carouselEl.children[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      };
+      dotsEl.appendChild(dot);
+    });
+
+    carouselEl.addEventListener('scroll', () => {
+      const idx = Math.round(carouselEl.scrollLeft / carouselEl.offsetWidth);
+      [...dotsEl.children].forEach((d, i) => d.classList.toggle('active', i === idx));
+    }, { passive: true });
+  }
+
+  // ── LOAD TODAY ──
+  async function loadToday() {
+    const key = todayKey();
+    document.getElementById('dateDisplay').textContent = formatDate(key).toUpperCase();
+    document.getElementById('nickname').textContent = nicknameForToday();
+
+    const entry = await fetchDay(key);
+    const carousel = document.getElementById('todayCarousel');
+    const dots = document.getElementById('dots');
+
+    if (!entry) {
+      carousel.innerHTML = `
+        <div class="empty-state" style="flex:0 0 100%;">
+          <div class="icon">🌸</div>
+          <h3>Not here yet…</h3>
+          <p>Today's messages are on their way.<br>Check back a little later, love.</p>
+        </div>`;
+      return;
+    }
+    buildCards(entry, carousel, dots);
+  }
+
+  // ── LIBRARY ──
   let allEntries = [];
   let currentTab = 'all';
+
+  async function loadLibrary() {
+    allEntries = await fetchLibrary();
+    renderLibrary();
+  }
 
   function switchTab(tab) {
     currentTab = tab;
@@ -834,210 +961,11 @@
     });
   }
 
-  // ── RENDER CARDS ──
-  function buildCards(entry, carouselEl, dotsEl) {
-    carouselEl.innerHTML = '';
-    dotsEl.innerHTML = '';
-
-    const images = [entry.image_1, entry.image_2, entry.image_3, entry.image_4];
-    const texts  = [entry.text_1,  entry.text_2,  entry.text_3,  entry.text_4];
-    const audios = [entry.audio_1, entry.audio_2, entry.audio_3, entry.audio_4];
-
-    images.forEach((url, i) => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.style.animationDelay = (i * 0.08) + 's';
-
-      if (url) {
-        const img = document.createElement('img');
-        img.src = url;
-        img.alt = 'Affirmation';
-        img.loading = 'lazy';
-        img.onclick = () => openLightbox(url);
-        card.appendChild(img);
-      } else {
-        const ph = document.createElement('div');
-        ph.className = 'card-placeholder';
-        ph.innerHTML = '<span>♡</span><p>Coming soon</p>';
-        card.appendChild(ph);
-      }
-
-      if (texts[i] && texts[i].trim()) {
-        const msg = document.createElement('div');
-        msg.className = 'card-message';
-        msg.textContent = texts[i].trim();
-        card.appendChild(msg);
-      }
-
-      // Card footer — play button (left) + heart button (right)
-      const footer = document.createElement('div');
-      footer.className = 'card-footer';
-
-      // Play button (only if audio exists)
-      const audioUrl = [entry.audio_1, entry.audio_2, entry.audio_3, entry.audio_4][i];
-      if (audioUrl) {
-        const audio = new Audio(audioUrl);
-        const playBtn = document.createElement('button');
-        playBtn.className = 'play-btn';
-        playBtn.title = 'Play voice note';
-        playBtn.textContent = '▶';
-        playBtn.onclick = (e) => {
-          e.stopPropagation();
-          if (audio.paused) {
-            // Stop any other playing audio
-            document.querySelectorAll('audio').forEach(a => a.pause());
-            document.querySelectorAll('.play-btn').forEach(b => { b.textContent = '▶'; b.classList.remove('playing'); });
-            audio.play();
-            playBtn.textContent = '⏸';
-            playBtn.classList.add('playing');
-            audio.onended = () => { playBtn.textContent = '▶'; playBtn.classList.remove('playing'); };
-          } else {
-            audio.pause();
-            playBtn.textContent = '▶';
-            playBtn.classList.remove('playing');
-          }
-        };
-        footer.appendChild(playBtn);
-      } else {
-        // Empty spacer so heart stays right-aligned
-        const spacer = document.createElement('span');
-        footer.appendChild(spacer);
-      }
-
-      // Heart button (right)
-      const favBtn = document.createElement('button');
-      const alreadyFav = isFav(entry.date, i);
-      favBtn.className = 'fav-btn' + (alreadyFav ? ' active' : '');
-      favBtn.textContent = alreadyFav ? '♥' : '♡';
-      favBtn.title = 'Save to favourites';
-      favBtn.onclick = (e) => {
-        e.stopPropagation();
-        toggleFav(entry.date, i, favBtn);
-      };
-      footer.appendChild(favBtn);
-
-      card.appendChild(footer);
-
-      carouselEl.appendChild(card);
-
-      const dot = document.createElement('div');
-      dot.className = 'dot' + (i === 0 ? ' active' : '');
-      dot.onclick = () => {
-        carouselEl.children[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      };
-      dotsEl.appendChild(dot);
-    });
-
-    carouselEl.addEventListener('scroll', () => {
-      const idx = Math.round(carouselEl.scrollLeft / carouselEl.offsetWidth);
-      [...dotsEl.children].forEach((d, i) => d.classList.toggle('active', i === idx));
-    }, { passive: true });
-  }
-
-  // ── LOAD TODAY ──
-  async function loadToday() {
-    const key = todayKey();
-    document.getElementById('dateDisplay').textContent = formatDate(key).toUpperCase();
-
-    const entry = await fetchDay(key);
-    const carousel = document.getElementById('todayCarousel');
-    const dots = document.getElementById('dots');
-
-    // Show sticky note if there's a love note
-    if (entry && (entry.love_note || entry.audio_love_note)) {
-      if (entry.love_note && entry.love_note.trim()) {
-        document.getElementById('stickyText').textContent = entry.love_note.trim();
-      }
-      // Add play button to sticky if audio exists
-      if (entry.audio_love_note) {
-        const stickyEl = document.querySelector('.sticky-note');
-        const audio = new Audio(entry.audio_love_note);
-        const playBtn = document.createElement('button');
-        playBtn.className = 'play-btn';
-        playBtn.style.cssText = 'position:absolute; bottom:12px; left:14px; font-size:1rem;';
-        playBtn.textContent = '▶';
-        playBtn.title = 'Hear Jeff read this note';
-        playBtn.onclick = () => {
-          if (audio.paused) {
-            document.querySelectorAll('audio').forEach(a => a.pause());
-            document.querySelectorAll('.play-btn').forEach(b => { b.textContent = '▶'; b.classList.remove('playing'); });
-            audio.play();
-            playBtn.textContent = '⏸';
-            playBtn.classList.add('playing');
-            audio.onended = () => { playBtn.textContent = '▶'; playBtn.classList.remove('playing'); };
-          } else {
-            audio.pause();
-            playBtn.textContent = '▶';
-            playBtn.classList.remove('playing');
-          }
-        };
-        stickyEl.appendChild(playBtn);
-      }
-      document.getElementById('stickySection').style.display = 'block';
-    }
-
-    if (!entry) {
-      carousel.innerHTML = `
-        <div class="empty-state" style="flex:0 0 100%;">
-          <div class="icon">🌸</div>
-          <h3>Not here yet…</h3>
-          <p>Today's messages are on their way.<br>Check back a little later, love.</p>
-        </div>`;
-      return;
-    }
-    buildCards(entry, carousel, dots);
-  }
-
-  // ── LOAD LIBRARY ──
-  async function loadLibrary() {
-    const entries = await fetchLibrary();
-    allEntries = entries;
-    renderLibrary();
-  }
-
   // ── MODAL ──
   async function openModal(dateKey) {
     const entry = await fetchDay(dateKey);
     if (!entry) return;
     document.getElementById('modalDate').textContent = formatDate(dateKey);
-
-    // Sticky note for this past day
-    const stickySection = document.getElementById('modalStickySection');
-    const stickyNoteEl = stickySection.querySelector('.sticky-note');
-    // remove any old play button before rebuilding
-    const oldPlayBtn = stickyNoteEl.querySelector('.play-btn');
-    if (oldPlayBtn) oldPlayBtn.remove();
-
-    if (entry.love_note || entry.audio_love_note) {
-      document.getElementById('modalStickyText').textContent = entry.love_note ? entry.love_note.trim() : '';
-      if (entry.audio_love_note) {
-        const audio = new Audio(entry.audio_love_note);
-        const playBtn = document.createElement('button');
-        playBtn.className = 'play-btn';
-        playBtn.style.cssText = 'position:absolute; bottom:12px; left:14px; font-size:1rem;';
-        playBtn.textContent = '▶';
-        playBtn.title = 'Hear Jeff read this note';
-        playBtn.onclick = () => {
-          if (audio.paused) {
-            document.querySelectorAll('audio').forEach(a => a.pause());
-            document.querySelectorAll('.play-btn').forEach(b => { b.textContent = '▶'; b.classList.remove('playing'); });
-            audio.play();
-            playBtn.textContent = '⏸';
-            playBtn.classList.add('playing');
-            audio.onended = () => { playBtn.textContent = '▶'; playBtn.classList.remove('playing'); };
-          } else {
-            audio.pause();
-            playBtn.textContent = '▶';
-            playBtn.classList.remove('playing');
-          }
-        };
-        stickyNoteEl.appendChild(playBtn);
-      }
-      stickySection.style.display = 'block';
-    } else {
-      stickySection.style.display = 'none';
-    }
-
     const carousel = document.getElementById('modalCarousel');
     const dots = document.getElementById('modalDots');
     buildCards(entry, carousel, dots);
@@ -1047,7 +975,7 @@
 
   function closeModal(e) {
     if (e && e.target !== document.getElementById('modal') && e.type === 'click') return;
-    document.querySelectorAll('audio').forEach(a => a.pause());
+    stopAllAudio();
     document.getElementById('modal').style.display = 'none';
     document.body.style.overflow = '';
   }
