@@ -180,14 +180,23 @@
 
     /* ── LOVE NOTE CARD (first in deck) ── */
     .note-card-body {
-      flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: 28px 26px 20px;
+      justify-content: space-between;
+      aspect-ratio: 1 / 1;
+      overflow-y: auto;
+      padding: 24px 24px 16px;
       background:
         linear-gradient(160deg, #fffdf6 0%, #fdf4ec 100%);
-      min-height: 300px;
+    }
+
+    .note-text-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+      padding: 12px 0;
     }
 
     .note-eyebrow {
@@ -209,14 +218,16 @@
       text-align: center;
       white-space: pre-wrap;
     }
+    .note-text.long { font-size: 1.2rem; line-height: 1.5; }
+    .note-text.very-long { font-size: 1.02rem; line-height: 1.45; }
 
     .note-sig {
-      margin-top: 20px;
       font-family: 'Caveat', cursive;
       font-size: 1.1rem;
       font-weight: 500;
       color: var(--deep-rose);
       text-align: right;
+      flex-shrink: 0;
     }
 
     /* ── CARD FOOTER (play + heart) ── */
@@ -805,12 +816,19 @@
       eyebrow.textContent = 'A note from Jeff ♡';
       body.appendChild(eyebrow);
 
+      const textWrap = document.createElement('div');
+      textWrap.className = 'note-text-wrap';
+
       if (entry.love_note && entry.love_note.trim()) {
+        const noteStr = entry.love_note.trim();
         const text = document.createElement('div');
         text.className = 'note-text';
-        text.textContent = entry.love_note.trim();
-        body.appendChild(text);
+        if (noteStr.length > 340) text.classList.add('very-long');
+        else if (noteStr.length > 180) text.classList.add('long');
+        text.textContent = noteStr;
+        textWrap.appendChild(text);
       }
+      body.appendChild(textWrap);
 
       const sig = document.createElement('div');
       sig.className = 'note-sig';
