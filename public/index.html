@@ -182,22 +182,26 @@
     .note-card-body {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      aspect-ratio: 1 / 1;
-      overflow-y: auto;
-      padding: 24px 24px 16px;
+      /* Hard square: height locked to the card's width */
+      height: min(calc(100vw - 64px), 360px);
+      padding: 20px 22px 14px;
       background:
         linear-gradient(160deg, #fffdf6 0%, #fdf4ec 100%);
+      overflow: hidden;
     }
 
-    .note-text-wrap {
+    .note-scroll {
       flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       min-height: 0;
-      padding: 12px 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      -webkit-overflow-scrolling: touch;
     }
+
+    /* margin:auto centers short notes without the clipped-top
+       overflow bug that flex centering causes in scroll containers */
+    .note-scroll .note-text { margin: auto 0; }
 
     .note-eyebrow {
       font-size: 0.64rem;
@@ -206,7 +210,8 @@
       text-transform: uppercase;
       color: var(--rose);
       text-align: center;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
+      flex-shrink: 0;
     }
 
     .note-text {
@@ -219,15 +224,17 @@
       white-space: pre-wrap;
     }
     .note-text.long { font-size: 1.2rem; line-height: 1.5; }
-    .note-text.very-long { font-size: 1.02rem; line-height: 1.45; }
+    .note-text.very-long { font-size: 1rem; line-height: 1.45; }
+    .note-text.extra-long { font-size: 0.88rem; line-height: 1.42; }
 
     .note-sig {
       font-family: 'Caveat', cursive;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 500;
       color: var(--deep-rose);
       text-align: right;
       flex-shrink: 0;
+      margin-top: 8px;
     }
 
     /* ── CARD FOOTER (play + heart) ── */
@@ -817,13 +824,14 @@
       body.appendChild(eyebrow);
 
       const textWrap = document.createElement('div');
-      textWrap.className = 'note-text-wrap';
+      textWrap.className = 'note-scroll';
 
       if (entry.love_note && entry.love_note.trim()) {
         const noteStr = entry.love_note.trim();
         const text = document.createElement('div');
         text.className = 'note-text';
-        if (noteStr.length > 340) text.classList.add('very-long');
+        if (noteStr.length > 600) text.classList.add('extra-long');
+        else if (noteStr.length > 340) text.classList.add('very-long');
         else if (noteStr.length > 180) text.classList.add('long');
         text.textContent = noteStr;
         textWrap.appendChild(text);
