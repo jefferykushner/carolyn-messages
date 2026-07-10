@@ -458,7 +458,7 @@
           <div class="clear-btn" onclick="clearFile(event,'${slot.key}')">✕</div>
           <div class="drop-hint">
             <div class="icon">🌸</div>
-            <p>Tap to choose<br>image</p>
+            <p>Tap to choose<br>or click &amp; paste</p>
           </div>
         </div>
         <textarea
@@ -474,16 +474,18 @@
       </div>`;
   });
 
-  function handleFile(key, input) {
-    const file = input.files[0];
-    if (!file) return;
+  function applyFileToZone(key, file) {
+    if (!file || !file.type.startsWith('image/')) return;
     files[key] = file;
     const zone = document.getElementById('zone_' + key);
     zone.classList.add('has-image');
-    // show preview
     let img = zone.querySelector('img');
     if (!img) { img = document.createElement('img'); zone.appendChild(img); }
     img.src = URL.createObjectURL(file);
+  }
+
+  function handleFile(key, input) {
+    applyFileToZone(key, input.files[0]);
   }
 
   function clearFile(e, key) {
@@ -496,6 +498,35 @@
     const input = zone.querySelector('input');
     input.value = '';
   }
+
+  // ── PASTE INTO ZONE ──
+  // Track which zone is focused for paste targeting
+  let focusedZoneKey = null;
+
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    const key = zone.id.replace('zone_', '');
+    zone.setAttribute('tabindex', '0');
+
+    zone.addEventListener('focus', () => { focusedZoneKey = key; });
+    zone.addEventListener('click', () => { focusedZoneKey = key; zone.focus(); });
+    zone.addEventListener('blur', () => { if (focusedZoneKey === key) focusedZoneKey = null; });
+  });
+
+  document.addEventListener('paste', (e) => {
+    const items = (e.clipboardData || e.originalEvent?.clipboardData)?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (!file) continue;
+        // Use focused zone, or find first empty slot
+        const targetKey = focusedZoneKey || SLOTS.find(s => !files[s.key])?.key;
+        if (targetKey) applyFileToZone(targetKey, file);
+        e.preventDefault();
+        break;
+      }
+    }
+  });
 
   // ── Upload to Supabase Storage ──
   async function uploadImage(file, dateKey, slot) {
