@@ -118,13 +118,21 @@
     .drop-zone:hover, .drop-zone:focus { border-color: var(--rose); background: #fde8ed; outline: none; }
     .drop-zone.has-image { border-style: solid; border-color: var(--rose); }
 
-    .drop-zone input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
+    .drop-zone input[type="file"] { display: none; }
+
+    .browse-btn {
+      margin-top: 4px;
+      background: none;
+      border: 1px solid var(--blush);
+      border-radius: 10px;
+      padding: 2px 8px;
+      font-size: 0.58rem;
+      font-family: 'Lato', sans-serif;
+      color: var(--soft-graphite);
       cursor: pointer;
-      z-index: 2;
+      transition: all 0.2s;
     }
+    .browse-btn:hover { border-color: var(--rose); color: var(--deep-rose); }
 
     .drop-zone img {
       position: absolute;
@@ -439,8 +447,17 @@
 
   const files = { image_1: null, image_2: null, image_3: null, image_4: null };
   const audioBlobs = { audio_1: null, audio_2: null, audio_3: null, audio_4: null, audio_love_note: null };
+  // URLs already saved in the database for the loaded day (kept unless replaced/cleared)
+  const existing = { image_1: null, image_2: null, image_3: null, image_4: null,
+                     audio_1: null, audio_2: null, audio_3: null, audio_4: null, audio_love_note: null };
   const recorders = {};
   const recTimers = {};
+
+  function browseFile(e, key) {
+    e.stopPropagation();
+    e.preventDefault();
+    document.querySelector('#zone_' + key + ' input').click();
+  }
 
   // ── Set today's date ──
   document.getElementById('dateInput').value = new Date().toISOString().slice(0, 10);
@@ -455,7 +472,8 @@
           <div class="clear-btn" onclick="clearFile(event,'${slot.key}')">✕</div>
           <div class="drop-hint">
             <span class="icon">🌸</span>
-            ${i + 1} · Tap or<br>click &amp; paste
+            ${i + 1} · Click, then<br>paste (Ctrl+V)<br>
+            <button class="browse-btn" onclick="browseFile(event,'${slot.key}')">Browse…</button>
           </div>
         </div>
         <div class="slot-right">
@@ -491,11 +509,109 @@
   function clearFile(e, key) {
     e.stopPropagation();
     files[key] = null;
+    existing[key] = null;
     const zone = document.getElementById('zone_' + key);
     zone.classList.remove('has-image');
     const img = zone.querySelector('img');
     if (img) img.remove();
     zone.querySelector('input').value = '';
+  }
+
+  function showImagePreviewFromUrl(key, url) {
+    const zone = document.getElementById('zone_' + key);
+    zone.classList.add('has-image');
+    let img = zone.querySelector('img');
+    if (!img) { img = document.createElement('img'); zone.appendChild(img); }
+    img.src = url;
+  }
+
+  function showExistingAudio(audioKey, url) {
+    const recEl = document.getElementById('recorder_' + audioKey);
+    let player = recEl.querySelector('audio');
+    if (!player) {
+      player = document.createElement('audio');
+      player.className = 'rec-playback';
+      player.controls = true;
+      recEl.appendChild(player);
+    }
+    player.src = url;
+    document.getElementById('status_' + audioKey).textContent = 'Saved voice note ✓';
+    const btn = recEl.querySelector('.rec-btn');
+    btn.className = 'rec-btn clear';
+    btn.textContent = '✕ Clear';
+    btn.onclick = () => clearRecording(audioKey);
+  }
+
+  function resetForm() {
+    Object.keys(files).forEach(k => { files[k] = null; });
+    Object.keys(audioBlobs).forEach(k => { audioBlobs[k] = null; });
+    Object.keys(existing).forEach(k => { existing[k] = null; });
+    SLOTS.forEach(slot => {
+      const zone = document.getElementById('zone_' + slot.key);
+      zone.classList.remove('has-image');
+      const img = zone.querySelector('img');
+      if (img) img.remove();
+      zone.querySelector('input').value = '';
+      document.getElementById('text_' + slot.key).value = '';
+      resetRecorderUI(slot.audioKey);
+    });
+    document.getElementById('love_note').value = '';
+    resetRecorderUI('audio_love_note');
+  }
+
+  function resetRecorderUI(audioKey) {
+    const recEl = document.getElementById('recorder_' + audioKey);
+    const player = recEl.querySelector('audio');
+    if (player) player.remove();
+    document.getElementById('status_' + audioKey).textContent = 'No voice note';
+    const btn = recEl.querySelector('.rec-btn');
+    btn.className = 'rec-btn start';
+    btn.textContent = '🎙 Record';
+    btn.onclick = () => startRecording(audioKey);
+  }
+
+  // Changing the date manually starts a fresh form
+  document.getElementById('dateInput').addEventListener('change', () => {
+    resetForm();
+  });
+
+  // ── LOAD A PAST DAY FOR EDITING ──
+  async function loadDay(dateKey) {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/affirmations?date=eq.${dateKey}&select=*`,
+      { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+    );
+    const rows = await res.json();
+    const entry = rows[0];
+    if (!entry) return showStatus('Could not load that day.', 'error');
+
+    resetForm();
+    document.getElementById('dateInput').value = dateKey;
+
+    SLOTS.forEach((slot, i) => {
+      const imgUrl = entry[slot.key];
+      if (imgUrl) {
+        existing[slot.key] = imgUrl;
+        showImagePreviewFromUrl(slot.key, imgUrl);
+      }
+      const txt = entry['text_' + (i + 1)];
+      if (txt) document.getElementById('text_' + slot.key).value = txt;
+
+      const audioUrl = entry[slot.audioKey];
+      if (audioUrl) {
+        existing[slot.audioKey] = audioUrl;
+        showExistingAudio(slot.audioKey, audioUrl);
+      }
+    });
+
+    if (entry.love_note) document.getElementById('love_note').value = entry.love_note;
+    if (entry.audio_love_note) {
+      existing['audio_love_note'] = entry.audio_love_note;
+      showExistingAudio('audio_love_note', entry.audio_love_note);
+    }
+
+    showStatus(`Editing ${dateKey} — make your changes and hit Publish to save.`, 'loading');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // ── PASTE SUPPORT ──
@@ -590,14 +706,8 @@
 
   function clearRecording(audioKey) {
     audioBlobs[audioKey] = null;
-    const recEl = document.getElementById('recorder_' + audioKey);
-    const player = recEl.querySelector('audio');
-    if (player) player.remove();
-    document.getElementById('status_' + audioKey).textContent = 'No voice note';
-    const btn = recEl.querySelector('.rec-btn');
-    btn.className = 'rec-btn start';
-    btn.textContent = '🎙 Record';
-    btn.onclick = () => startRecording(audioKey);
+    existing[audioKey] = null;
+    resetRecorderUI(audioKey);
   }
 
   // ── UPLOADS ──
@@ -643,8 +753,10 @@
     const dateKey = document.getElementById('dateInput').value;
     if (!dateKey) return showStatus('Please choose a date.', 'error');
 
-    const hasAnyImage = Object.values(files).some(f => f !== null);
-    const hasNote = document.getElementById('love_note').value.trim() || audioBlobs['audio_love_note'];
+    const hasAnyImage = Object.values(files).some(f => f !== null) ||
+                        ['image_1','image_2','image_3','image_4'].some(k => existing[k]);
+    const hasNote = document.getElementById('love_note').value.trim() ||
+                    audioBlobs['audio_love_note'] || existing['audio_love_note'];
     if (!hasAnyImage && !hasNote) return showStatus('Please add at least one image or note.', 'error');
 
     const btn = document.getElementById('publishBtn');
@@ -682,13 +794,20 @@
         },
         body: JSON.stringify({
           date: dateKey,
-          ...urls,
+          image_1: urls.image_1 || existing.image_1 || null,
+          image_2: urls.image_2 || existing.image_2 || null,
+          image_3: urls.image_3 || existing.image_3 || null,
+          image_4: urls.image_4 || existing.image_4 || null,
+          audio_1: urls.audio_1 || existing.audio_1 || null,
+          audio_2: urls.audio_2 || existing.audio_2 || null,
+          audio_3: urls.audio_3 || existing.audio_3 || null,
+          audio_4: urls.audio_4 || existing.audio_4 || null,
           text_1: document.getElementById('text_image_1')?.value.trim() || null,
           text_2: document.getElementById('text_image_2')?.value.trim() || null,
           text_3: document.getElementById('text_image_3')?.value.trim() || null,
           text_4: document.getElementById('text_image_4')?.value.trim() || null,
           love_note: document.getElementById('love_note')?.value.trim() || null,
-          audio_love_note: urls['audio_love_note'] || null,
+          audio_love_note: urls['audio_love_note'] || existing['audio_love_note'] || null,
         })
       });
 
@@ -740,6 +859,7 @@
         <div class="recent-info">
           <div class="recent-date">${r.date}</div>
         </div>
+        <button class="recent-delete" style="border-color: var(--rose); color: var(--deep-rose);" onclick="loadDay('${r.date}')">Edit</button>
         <button class="recent-delete" onclick="deleteEntry('${r.date}')">Remove</button>
       </div>
     `).join('');
