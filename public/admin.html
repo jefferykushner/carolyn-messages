@@ -375,10 +375,111 @@
       transition: all 0.2s;
     }
     .recent-delete:hover { border-color: var(--rose); color: var(--deep-rose); }
+
+    /* ── LOCK SCREEN ── */
+    #lockScreen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(160deg, #fdf0f3, #fde8ed);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    #lockScreen.hidden { display: none; }
+    .lock-card {
+      background: var(--warm-white);
+      border-radius: 20px;
+      padding: 36px 32px;
+      box-shadow: 0 8px 40px rgba(200,100,110,0.18);
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+    }
+    .lock-card .lock-icon { font-size: 2.4rem; margin-bottom: 12px; }
+    .lock-card h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: var(--deep-rose);
+      margin-bottom: 6px;
+    }
+    .lock-card p {
+      font-size: 0.82rem;
+      color: var(--soft-graphite);
+      margin-bottom: 20px;
+    }
+    .lock-card input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--blush);
+      border-radius: 10px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.95rem;
+      color: var(--graphite);
+      background: var(--cream);
+      outline: none;
+      text-align: center;
+      letter-spacing: 0.1em;
+      transition: border-color 0.2s;
+    }
+    .lock-card input:focus { border-color: var(--rose); }
+    .lock-remember {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 14px 0 18px;
+      font-size: 0.8rem;
+      color: var(--soft-graphite);
+      cursor: pointer;
+    }
+    .lock-remember input { width: auto; }
+    .lock-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--rose);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .lock-btn:hover { background: var(--deep-rose); }
+    .lock-error {
+      color: var(--deep-rose);
+      font-size: 0.8rem;
+      margin-top: 12px;
+      min-height: 18px;
+    }
   </style>
 </head>
 <body>
-<div class="container">
+
+<!-- Lock screen -->
+<div id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-icon">🔒</div>
+    <h2>Morning Messages</h2>
+    <p>Enter your password to continue</p>
+    <input type="password" id="lockInput" placeholder="Password"
+           onkeydown="if(event.key==='Enter') tryUnlock()" autocomplete="current-password" />
+    <label class="lock-remember">
+      <input type="checkbox" id="lockRemember" /> Remember me on this device
+    </label>
+    <button class="lock-btn" onclick="tryUnlock()">Unlock ♡</button>
+    <div class="lock-error" id="lockError"></div>
+  </div>
+</div>
+
+<div class="container" id="adminContainer" style="display:none">
 
   <header>
     <h1>Morning Messages ♡</h1>
@@ -432,6 +533,47 @@
 </div>
 
 <script>
+  // ── PASSWORD GATE ──
+  // Change this to whatever password you like:
+  const ADMIN_PASSWORD = 'Belbet80!Belbet80!';
+  const UNLOCK_TOKEN = 'cm_admin_unlocked_v1';
+
+  function isUnlocked() {
+    return localStorage.getItem(UNLOCK_TOKEN) === 'yes' ||
+           sessionStorage.getItem(UNLOCK_TOKEN) === 'yes';
+  }
+
+  function tryUnlock() {
+    const val = document.getElementById('lockInput').value;
+    if (val === ADMIN_PASSWORD) {
+      if (document.getElementById('lockRemember').checked) {
+        localStorage.setItem(UNLOCK_TOKEN, 'yes');
+      } else {
+        sessionStorage.setItem(UNLOCK_TOKEN, 'yes');
+      }
+      unlockAdmin();
+    } else {
+      document.getElementById('lockError').textContent = 'Incorrect password. Try again.';
+      document.getElementById('lockInput').value = '';
+    }
+  }
+
+  function unlockAdmin() {
+    document.getElementById('lockScreen').classList.add('hidden');
+    document.getElementById('adminContainer').style.display = 'block';
+    if (typeof loadRecent === 'function') loadRecent();
+  }
+
+  // Check on load
+  if (isUnlocked()) {
+    unlockAdmin();
+  } else {
+    // focus the password field
+    window.addEventListener('load', () => {
+      setTimeout(() => document.getElementById('lockInput').focus(), 100);
+    });
+  }
+
   const SUPABASE_URL = 'https://istzagkjchlvjsbrvahm.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzdHphZ2tqY2hsdmpzYnJ2YWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTk4MzgsImV4cCI6MjA5NTg3NTgzOH0.7JeL2ScsjC1hoySuKb6q2omgFkGnGoL8dOPDNRNDezk';
 
@@ -874,7 +1016,8 @@
     loadRecent();
   }
 
-  loadRecent();
+  // Only load data if already unlocked; otherwise it loads right after unlock
+  if (isUnlocked()) loadRecent();
 </script>
 </body>
 </html>
