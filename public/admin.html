@@ -93,6 +93,7 @@
       display: grid;
       grid-template-columns: 96px 1fr;
       gap: 12px;
+      align-items: start;   /* ← add this */
     }
 
     .slot-row.note-row {
@@ -212,7 +213,7 @@
       outline: none;
       transition: border-color 0.2s;
       line-height: 1.45;
-      flex: 1;
+      flex: none;        /* ← was flex: 1 */
     }
     .slot-textarea:focus { border-color: var(--rose); }
     .slot-textarea::placeholder { color: var(--blush); font-style: italic; }
