@@ -5,7 +5,7 @@
 // Every request must include the admin password in a header.
 //
 // Required Netlify environment variables:
-//   SUPABASE_URL              https://istzagkjchlvjsbrvahm.supabase.co
+//   SUPABASE_URL              SUPABASE_URL
 //   SUPABASE_SERVICE_ROLE_KEY (your service_role JWT)
 //   ADMIN_PASSWORD            (your chosen admin password)
 // ─────────────────────────────────────────────────────────
