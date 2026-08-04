@@ -93,7 +93,7 @@
       display: grid;
       grid-template-columns: 96px 1fr;
       gap: 12px;
-      align-items: start;   /* ← add this */
+      align-items: start;
     }
 
     .slot-row.note-row {
@@ -213,7 +213,8 @@
       outline: none;
       transition: border-color 0.2s;
       line-height: 1.45;
-      flex: none;        /* ← was flex: 1 */
+      flex: none;
+      overflow-y: auto;
     }
     .slot-textarea:focus { border-color: var(--rose); }
     .slot-textarea::placeholder { color: var(--blush); font-style: italic; }
@@ -460,6 +461,41 @@
       margin-top: 12px;
       min-height: 18px;
     }
+
+    /* ── DESKTOP COMFORT (only affects your laptop) ── */
+    @media (min-width: 900px) {
+      .container { max-width: 960px; }
+
+      .slot-row {
+        grid-template-columns: 180px 1fr;
+        padding: 18px;
+        gap: 20px;
+      }
+
+      .drop-zone {
+        width: 180px;
+        height: 180px;
+      }
+
+      .note-icon-box {
+        width: 180px;
+        height: 180px;
+        font-size: 2.2rem;
+      }
+      .note-icon-box span { font-size: 0.7rem; }
+
+      .slot-textarea {
+        min-height: 110px;
+        font-size: 1.05rem;
+        padding: 12px 14px;
+      }
+
+      .drop-zone .drop-hint { font-size: 0.7rem; }
+      .drop-zone .drop-hint .icon { font-size: 1.5rem; }
+      .browse-btn { font-size: 0.68rem; padding: 3px 10px; }
+
+      .recent-thumb { width: 52px; height: 52px; }
+    }
   </style>
 </head>
 <body>
@@ -534,8 +570,35 @@
 </div>
 
 <script>
-  // ── PASSWORD GATE ──
-  // Change this to whatever password you like:
+  // ══════════════════════════════════════════════════════
+  // CONSTANTS FIRST — these must be declared before any
+  // code that might reference them (including unlockAdmin)
+  // ══════════════════════════════════════════════════════
+  const SUPABASE_URL = 'https://istzagkjchlvjsbrvahm.supabase.co';
+  // ── SERVICE KEY (admin only) ──
+  // This page is password-gated, so the powerful service_role key lives safely here.
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzdHphZ2tqY2hsdmpzYnJ2YWhtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDI5OTgzOCwiZXhwIjoyMDk1ODc1ODM4fQ.G9hvcmx7sUuwqNLDcM6JovaV8VCySsSEXGaDPfDuJso';
+
+  const CLOUDINARY_CLOUD = 'dbv3ahmxu';
+  const CLOUDINARY_PRESET = 'carolyn_audio';
+
+  const SLOTS = [
+    { key: 'image_1', audioKey: 'audio_1' },
+    { key: 'image_2', audioKey: 'audio_2' },
+    { key: 'image_3', audioKey: 'audio_3' },
+    { key: 'image_4', audioKey: 'audio_4' },
+  ];
+
+  const files = { image_1: null, image_2: null, image_3: null, image_4: null };
+  const audioBlobs = { audio_1: null, audio_2: null, audio_3: null, audio_4: null, audio_love_note: null };
+  const existing = { image_1: null, image_2: null, image_3: null, image_4: null,
+                     audio_1: null, audio_2: null, audio_3: null, audio_4: null, audio_love_note: null };
+  const recorders = {};
+  const recTimers = {};
+
+  // ══════════════════════════════════════════════════════
+  // PASSWORD GATE — now safe because SUPABASE_URL exists
+  // ══════════════════════════════════════════════════════
   const ADMIN_PASSWORD = 'Belbet80!Belbet80!';
   const UNLOCK_TOKEN = 'cm_admin_unlocked_v1';
 
@@ -569,35 +632,10 @@
   if (isUnlocked()) {
     unlockAdmin();
   } else {
-    // focus the password field
     window.addEventListener('load', () => {
       setTimeout(() => document.getElementById('lockInput').focus(), 100);
     });
   }
-
-  const SUPABASE_URL = 'https://istzagkjchlvjsbrvahm.supabase.co';
-  // ── SERVICE KEY (admin only) ──
-  // This page is password-gated, so the powerful service_role key lives safely here.
-  // Paste your Supabase service_role key between the quotes below:
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzdHphZ2tqY2hsdmpzYnJ2YWhtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDI5OTgzOCwiZXhwIjoyMDk1ODc1ODM4fQ.G9hvcmx7sUuwqNLDcM6JovaV8VCySsSEXGaDPfDuJso';
-
-  const CLOUDINARY_CLOUD = 'dbv3ahmxu';
-  const CLOUDINARY_PRESET = 'carolyn_audio';
-
-  const SLOTS = [
-    { key: 'image_1', audioKey: 'audio_1' },
-    { key: 'image_2', audioKey: 'audio_2' },
-    { key: 'image_3', audioKey: 'audio_3' },
-    { key: 'image_4', audioKey: 'audio_4' },
-  ];
-
-  const files = { image_1: null, image_2: null, image_3: null, image_4: null };
-  const audioBlobs = { audio_1: null, audio_2: null, audio_3: null, audio_4: null, audio_love_note: null };
-  // URLs already saved in the database for the loaded day (kept unless replaced/cleared)
-  const existing = { image_1: null, image_2: null, image_3: null, image_4: null,
-                     audio_1: null, audio_2: null, audio_3: null, audio_4: null, audio_love_note: null };
-  const recorders = {};
-  const recTimers = {};
 
   function browseFile(e, key) {
     e.stopPropagation();
@@ -716,7 +754,6 @@
     btn.onclick = () => startRecording(audioKey);
   }
 
-  // Changing the date manually starts a fresh form
   document.getElementById('dateInput').addEventListener('change', () => {
     resetForm();
   });
