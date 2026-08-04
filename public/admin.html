@@ -48,7 +48,6 @@
       color: var(--deep-rose);
     }
 
-    /* DATE */
     .date-row {
       display: flex;
       align-items: center;
@@ -83,7 +82,6 @@
     }
     input[type="date"]:focus { border-color: var(--rose); }
 
-    /* ── SLOT ROWS ── */
     .slot-row {
       background: var(--warm-white);
       border-radius: 14px;
@@ -96,11 +94,8 @@
       align-items: start;
     }
 
-    .slot-row.note-row {
-      border-left: 3px solid var(--rose);
-    }
+    .slot-row.note-row { border-left: 3px solid var(--rose); }
 
-    /* image drop zone — compact */
     .drop-zone {
       width: 96px;
       height: 96px;
@@ -118,7 +113,6 @@
     }
     .drop-zone:hover, .drop-zone:focus { border-color: var(--rose); background: #fde8ed; outline: none; }
     .drop-zone.has-image { border-style: solid; border-color: var(--rose); }
-
     .drop-zone input[type="file"] { display: none; }
 
     .browse-btn {
@@ -169,7 +163,6 @@
     }
     .drop-zone.has-image .clear-btn { display: flex; }
 
-    /* note icon box (love note row) */
     .note-icon-box {
       width: 96px;
       height: 96px;
@@ -191,7 +184,6 @@
       text-align: center;
     }
 
-    /* right column of each row */
     .slot-right {
       display: flex;
       flex-direction: column;
@@ -219,288 +211,93 @@
     .slot-textarea:focus { border-color: var(--rose); }
     .slot-textarea::placeholder { color: var(--blush); font-style: italic; }
 
-    /* ── AUDIO RECORDER — compact strip ── */
-    .audio-recorder {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .audio-recorder { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
     .rec-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      border: none;
-      border-radius: 16px;
-      padding: 5px 12px;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 5px;
+      border: none; border-radius: 16px; padding: 5px 12px;
+      font-family: 'Lato', sans-serif; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.06em; cursor: pointer; transition: all 0.2s; white-space: nowrap;
     }
-
     .rec-btn.start { background: var(--rose); color: white; }
     .rec-btn.start:hover { background: var(--deep-rose); }
-
-    .rec-btn.stop {
-      background: var(--deep-rose);
-      color: white;
-      animation: pulse 1s ease infinite;
-    }
-
+    .rec-btn.stop { background: var(--deep-rose); color: white; animation: pulse 1s ease infinite; }
     @keyframes pulse {
       0%, 100% { box-shadow: 0 0 0 0 rgba(201,96,111,0.4); }
       50% { box-shadow: 0 0 0 6px rgba(201,96,111,0); }
     }
-
-    .rec-btn.clear {
-      background: none;
-      border: 1px solid var(--blush);
-      color: var(--soft-graphite);
-    }
+    .rec-btn.clear { background: none; border: 1px solid var(--blush); color: var(--soft-graphite); }
     .rec-btn.clear:hover { border-color: var(--rose); color: var(--deep-rose); }
+    .rec-timer { font-size: 0.7rem; color: var(--deep-rose); font-weight: 700; min-width: 32px; }
+    .rec-status { font-size: 0.68rem; color: var(--soft-graphite); font-style: italic; }
+    audio.rec-playback { height: 28px; width: 100%; border-radius: 8px; }
 
-    .rec-timer {
-      font-size: 0.7rem;
-      color: var(--deep-rose);
-      font-weight: 700;
-      min-width: 32px;
-    }
-
-    .rec-status {
-      font-size: 0.68rem;
-      color: var(--soft-graphite);
-      font-style: italic;
-    }
-
-    audio.rec-playback {
-      height: 28px;
-      width: 100%;
-      border-radius: 8px;
-    }
-
-    /* STATUS + PROGRESS */
     .status-bar {
-      background: var(--warm-white);
-      border-radius: 12px;
-      padding: 12px 16px;
-      margin: 14px 0;
-      font-size: 0.82rem;
-      display: none;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 2px 12px rgba(200,100,110,0.07);
+      background: var(--warm-white); border-radius: 12px; padding: 12px 16px;
+      margin: 14px 0; font-size: 0.82rem; display: none; align-items: center;
+      gap: 10px; box-shadow: 0 2px 12px rgba(200,100,110,0.07);
     }
     .status-bar.show { display: flex; }
     .status-bar.success { border-left: 3px solid var(--success); color: var(--success); }
     .status-bar.error { border-left: 3px solid var(--deep-rose); color: var(--deep-rose); }
     .status-bar.loading { border-left: 3px solid var(--rose); color: var(--soft-graphite); }
 
-    .progress-wrap {
-      height: 4px;
-      background: var(--blush);
-      border-radius: 2px;
-      overflow: hidden;
-      margin: 14px 0 0;
-      display: none;
-    }
+    .progress-wrap { height: 4px; background: var(--blush); border-radius: 2px; overflow: hidden; margin: 14px 0 0; display: none; }
     .progress-wrap.show { display: block; }
-    .progress-bar {
-      height: 100%;
-      background: var(--rose);
-      border-radius: 2px;
-      transition: width 0.3s;
-      width: 0%;
-    }
+    .progress-bar { height: 100%; background: var(--rose); border-radius: 2px; transition: width 0.3s; width: 0%; }
 
-    /* PUBLISH */
     .btn-publish {
-      width: 100%;
-      padding: 15px;
-      background: var(--rose);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-      margin-top: 6px;
+      width: 100%; padding: 15px; background: var(--rose); color: white; border: none;
+      border-radius: 14px; font-family: 'Lato', sans-serif; font-size: 0.88rem;
+      font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s, transform 0.15s; margin-top: 6px;
     }
     .btn-publish:hover { background: var(--deep-rose); }
     .btn-publish:active { transform: scale(0.99); }
     .btn-publish:disabled { background: var(--blush); cursor: not-allowed; }
 
-    /* RECENT */
     .recent-section { margin-top: 32px; }
-    .recent-section h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      font-weight: 300;
-      color: var(--graphite);
-      margin-bottom: 12px;
-    }
+    .recent-section h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 300; color: var(--graphite); margin-bottom: 12px; }
     .recent-list { display: flex; flex-direction: column; gap: 8px; }
-    .recent-item {
-      background: var(--warm-white);
-      border-radius: 12px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 1px 8px rgba(200,100,110,0.06);
-    }
-    .recent-thumb {
-      width: 40px; height: 40px;
-      border-radius: 8px;
-      object-fit: cover;
-      background: var(--cream);
-      flex-shrink: 0;
-    }
+    .recent-item { background: var(--warm-white); border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 8px rgba(200,100,110,0.06); }
+    .recent-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; background: var(--cream); flex-shrink: 0; }
     .recent-info { flex: 1; }
     .recent-date { font-size: 0.82rem; color: var(--graphite); font-weight: 700; }
-    .recent-delete {
-      background: none;
-      border: 1px solid var(--blush);
-      border-radius: 8px;
-      padding: 4px 10px;
-      font-size: 0.7rem;
-      color: var(--soft-graphite);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+    .recent-delete { background: none; border: 1px solid var(--blush); border-radius: 8px; padding: 4px 10px; font-size: 0.7rem; color: var(--soft-graphite); cursor: pointer; transition: all 0.2s; }
     .recent-delete:hover { border-color: var(--rose); color: var(--deep-rose); }
 
-    /* ── LOCK SCREEN ── */
-    #lockScreen {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(160deg, #fdf0f3, #fde8ed);
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
+    #lockScreen { position: fixed; inset: 0; background: linear-gradient(160deg, #fdf0f3, #fde8ed); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
     #lockScreen.hidden { display: none; }
-    .lock-card {
-      background: var(--warm-white);
-      border-radius: 20px;
-      padding: 36px 32px;
-      box-shadow: 0 8px 40px rgba(200,100,110,0.18);
-      width: 100%;
-      max-width: 360px;
-      text-align: center;
-    }
+    .lock-card { background: var(--warm-white); border-radius: 20px; padding: 36px 32px; box-shadow: 0 8px 40px rgba(200,100,110,0.18); width: 100%; max-width: 360px; text-align: center; }
     .lock-card .lock-icon { font-size: 2.4rem; margin-bottom: 12px; }
-    .lock-card h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.5rem;
-      font-weight: 300;
-      color: var(--deep-rose);
-      margin-bottom: 6px;
-    }
-    .lock-card p {
-      font-size: 0.82rem;
-      color: var(--soft-graphite);
-      margin-bottom: 20px;
-    }
-    .lock-card input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid var(--blush);
-      border-radius: 10px;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.95rem;
-      color: var(--graphite);
-      background: var(--cream);
-      outline: none;
-      text-align: center;
-      letter-spacing: 0.1em;
-      transition: border-color 0.2s;
-    }
+    .lock-card h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; color: var(--deep-rose); margin-bottom: 6px; }
+    .lock-card p { font-size: 0.82rem; color: var(--soft-graphite); margin-bottom: 20px; }
+    .lock-card input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--blush); border-radius: 10px; font-family: 'Lato', sans-serif; font-size: 0.95rem; color: var(--graphite); background: var(--cream); outline: none; text-align: center; letter-spacing: 0.1em; transition: border-color 0.2s; }
     .lock-card input:focus { border-color: var(--rose); }
-    .lock-remember {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin: 14px 0 18px;
-      font-size: 0.8rem;
-      color: var(--soft-graphite);
-      cursor: pointer;
-    }
+    .lock-remember { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 14px 0 18px; font-size: 0.8rem; color: var(--soft-graphite); cursor: pointer; }
     .lock-remember input { width: auto; }
-    .lock-btn {
-      width: 100%;
-      padding: 13px;
-      background: var(--rose);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
+    .lock-btn { width: 100%; padding: 13px; background: var(--rose); color: white; border: none; border-radius: 12px; font-family: 'Lato', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
     .lock-btn:hover { background: var(--deep-rose); }
-    .lock-error {
-      color: var(--deep-rose);
-      font-size: 0.8rem;
-      margin-top: 12px;
-      min-height: 18px;
-    }
+    .lock-btn:disabled { background: var(--blush); cursor: not-allowed; }
+    .lock-error { color: var(--deep-rose); font-size: 0.8rem; margin-top: 12px; min-height: 18px; }
 
-    /* ── DESKTOP COMFORT (only affects your laptop) ── */
+    /* ── DESKTOP COMFORT ── */
     @media (min-width: 900px) {
       .container { max-width: 960px; }
-
-      .slot-row {
-        grid-template-columns: 180px 1fr;
-        padding: 18px;
-        gap: 20px;
-      }
-
-      .drop-zone {
-        width: 180px;
-        height: 180px;
-      }
-
-      .note-icon-box {
-        width: 180px;
-        height: 180px;
-        font-size: 2.2rem;
-      }
+      .slot-row { grid-template-columns: 180px 1fr; padding: 18px; gap: 20px; }
+      .drop-zone { width: 180px; height: 180px; }
+      .note-icon-box { width: 180px; height: 180px; font-size: 2.2rem; }
       .note-icon-box span { font-size: 0.7rem; }
-
-      .slot-textarea {
-        min-height: 110px;
-        font-size: 1.05rem;
-        padding: 12px 14px;
-      }
-
+      .slot-textarea { min-height: 110px; font-size: 1.05rem; padding: 12px 14px; }
       .drop-zone .drop-hint { font-size: 0.7rem; }
       .drop-zone .drop-hint .icon { font-size: 1.5rem; }
       .browse-btn { font-size: 0.68rem; padding: 3px 10px; }
-
       .recent-thumb { width: 52px; height: 52px; }
     }
   </style>
 </head>
 <body>
 
-<!-- Lock screen -->
 <div id="lockScreen">
   <div class="lock-card">
     <div class="lock-icon">🔒</div>
@@ -517,26 +314,17 @@
 </div>
 
 <div class="container" id="adminContainer" style="display:none">
+  <header><h1>Morning Messages ♡</h1></header>
 
-  <header>
-    <h1>Morning Messages ♡</h1>
-  </header>
-
-  <!-- Date -->
   <div class="date-row">
     <label>Date</label>
     <input type="date" id="dateInput" />
   </div>
 
-  <!-- Love note row (first) -->
   <div class="slot-row note-row">
     <div class="note-icon-box">💛<span>Love<br>Note</span></div>
     <div class="slot-right">
-      <textarea
-        class="slot-textarea"
-        id="love_note"
-        placeholder="Write something from the heart… (optional)"
-      ></textarea>
+      <textarea class="slot-textarea" id="love_note" placeholder="Write something from the heart… (optional)"></textarea>
       <div class="audio-recorder" id="recorder_audio_love_note">
         <button class="rec-btn start" onclick="startRecording('audio_love_note')">🎙 Record</button>
         <span class="rec-timer" id="timer_audio_love_note" style="display:none">0:00</span>
@@ -545,43 +333,101 @@
     </div>
   </div>
 
-  <!-- Image slot rows -->
   <div id="uploadsGrid"></div>
 
-  <!-- Progress + status -->
-  <div class="progress-wrap" id="progressWrap">
-    <div class="progress-bar" id="progressBar"></div>
-  </div>
+  <div class="progress-wrap" id="progressWrap"><div class="progress-bar" id="progressBar"></div></div>
   <div class="status-bar" id="statusBar"></div>
 
-  <!-- Publish -->
-  <button class="btn-publish" id="publishBtn" onclick="publish()">
-    Publish ♡
-  </button>
+  <button class="btn-publish" id="publishBtn" onclick="publish()">Publish ♡</button>
 
-  <!-- Recent entries -->
   <div class="recent-section">
     <h2>Recent Days</h2>
     <div class="recent-list" id="recentList">
       <p style="font-size:0.83rem; color:var(--soft-graphite);">Loading…</p>
     </div>
   </div>
-
 </div>
 
 <script>
   // ══════════════════════════════════════════════════════
-  // CONSTANTS FIRST — these must be declared before any
-  // code that might reference them (including unlockAdmin)
+  //  NO SECRETS IN THIS FILE
+  //  The service_role key and admin password live in
+  //  Netlify env vars, accessed only by the server-side
+  //  function at /.netlify/functions/admin-api
   // ══════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://istzagkjchlvjsbrvahm.supabase.co';
-  // ── SERVICE KEY (admin only) ──
-  // This page is password-gated, so the powerful service_role key lives safely here.
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzdHphZ2tqY2hsdmpzYnJ2YWhtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDI5OTgzOCwiZXhwIjoyMDk1ODc1ODM4fQ.G9hvcmx7sUuwqNLDcM6JovaV8VCySsSEXGaDPfDuJso';
 
-  const CLOUDINARY_CLOUD = 'dbv3ahmxu';
+  const SUPABASE_PUBLIC_URL = 'https://istzagkjchlvjsbrvahm.supabase.co';
+  const CLOUDINARY_CLOUD  = 'dbv3ahmxu';
   const CLOUDINARY_PRESET = 'carolyn_audio';
 
+  const PROXY = '/.netlify/functions/admin-api';
+  const UNLOCK_TOKEN = 'cm_admin_unlocked_v2';
+
+  let adminPassword = '';
+
+  async function adminFetch(targetPath, opts = {}) {
+    const method = opts.method || 'GET';
+    const headers = {
+      'x-admin-password': adminPassword,
+      'x-target-path':    targetPath,
+      'x-target-method':  method,
+    };
+    if (opts.contentType) headers['content-type'] = opts.contentType;
+    if (opts.prefer)      headers['prefer']       = opts.prefer;
+    if (opts.upsert)      headers['x-upsert']     = 'true';
+    const fetchOpts = { method: 'POST', headers };
+    if (opts.body !== undefined) fetchOpts.body = opts.body;
+    return fetch(PROXY, fetchOpts);
+  }
+
+  // ── PASSWORD GATE (validated server-side) ──
+  function getSavedPassword() {
+    return localStorage.getItem('cm_admin_pw') || sessionStorage.getItem('cm_admin_pw') || '';
+  }
+
+  function isUnlocked() {
+    const hasToken = localStorage.getItem(UNLOCK_TOKEN) === 'yes' || sessionStorage.getItem(UNLOCK_TOKEN) === 'yes';
+    const pw = getSavedPassword();
+    if (hasToken && pw) { adminPassword = pw; return true; }
+    if (hasToken) { localStorage.removeItem(UNLOCK_TOKEN); sessionStorage.removeItem(UNLOCK_TOKEN); }
+    return false;
+  }
+
+  async function tryUnlock() {
+    const val = document.getElementById('lockInput').value;
+    const btn = document.querySelector('.lock-btn');
+    btn.disabled = true;
+    document.getElementById('lockError').textContent = '';
+    try {
+      const res = await fetch(PROXY, {
+        method: 'POST',
+        headers: { 'x-admin-password': val, 'x-target-path': '/__validate', 'x-target-method': 'GET' }
+      });
+      if (res.ok) {
+        adminPassword = val;
+        const storage = document.getElementById('lockRemember').checked ? localStorage : sessionStorage;
+        storage.setItem(UNLOCK_TOKEN, 'yes');
+        storage.setItem('cm_admin_pw', val);
+        unlockAdmin();
+      } else {
+        document.getElementById('lockError').textContent = 'Incorrect password. Try again.';
+        document.getElementById('lockInput').value = '';
+      }
+    } catch (err) {
+      document.getElementById('lockError').textContent = 'Connection error. Please try again.';
+    } finally { btn.disabled = false; }
+  }
+
+  function unlockAdmin() {
+    document.getElementById('lockScreen').classList.add('hidden');
+    document.getElementById('adminContainer').style.display = 'block';
+    loadRecent();
+  }
+
+  if (isUnlocked()) { unlockAdmin(); }
+  else { window.addEventListener('load', () => { setTimeout(() => document.getElementById('lockInput').focus(), 100); }); }
+
+  // ── SLOTS + STATE ──
   const SLOTS = [
     { key: 'image_1', audioKey: 'audio_1' },
     { key: 'image_2', audioKey: 'audio_2' },
@@ -589,64 +435,17 @@
     { key: 'image_4', audioKey: 'audio_4' },
   ];
 
-  const files = { image_1: null, image_2: null, image_3: null, image_4: null };
+  const files      = { image_1: null, image_2: null, image_3: null, image_4: null };
   const audioBlobs = { audio_1: null, audio_2: null, audio_3: null, audio_4: null, audio_love_note: null };
-  const existing = { image_1: null, image_2: null, image_3: null, image_4: null,
-                     audio_1: null, audio_2: null, audio_3: null, audio_4: null, audio_love_note: null };
-  const recorders = {};
-  const recTimers = {};
+  const existing   = { image_1: null, image_2: null, image_3: null, image_4: null,
+                       audio_1: null, audio_2: null, audio_3: null, audio_4: null, audio_love_note: null };
+  const recorders  = {};
+  const recTimers  = {};
 
-  // ══════════════════════════════════════════════════════
-  // PASSWORD GATE — now safe because SUPABASE_URL exists
-  // ══════════════════════════════════════════════════════
-  const ADMIN_PASSWORD = 'Belbet80!Belbet80!';
-  const UNLOCK_TOKEN = 'cm_admin_unlocked_v1';
+  function browseFile(e, key) { e.stopPropagation(); e.preventDefault(); document.querySelector('#zone_' + key + ' input').click(); }
 
-  function isUnlocked() {
-    return localStorage.getItem(UNLOCK_TOKEN) === 'yes' ||
-           sessionStorage.getItem(UNLOCK_TOKEN) === 'yes';
-  }
-
-  function tryUnlock() {
-    const val = document.getElementById('lockInput').value;
-    if (val === ADMIN_PASSWORD) {
-      if (document.getElementById('lockRemember').checked) {
-        localStorage.setItem(UNLOCK_TOKEN, 'yes');
-      } else {
-        sessionStorage.setItem(UNLOCK_TOKEN, 'yes');
-      }
-      unlockAdmin();
-    } else {
-      document.getElementById('lockError').textContent = 'Incorrect password. Try again.';
-      document.getElementById('lockInput').value = '';
-    }
-  }
-
-  function unlockAdmin() {
-    document.getElementById('lockScreen').classList.add('hidden');
-    document.getElementById('adminContainer').style.display = 'block';
-    if (typeof loadRecent === 'function') loadRecent();
-  }
-
-  // Check on load
-  if (isUnlocked()) {
-    unlockAdmin();
-  } else {
-    window.addEventListener('load', () => {
-      setTimeout(() => document.getElementById('lockInput').focus(), 100);
-    });
-  }
-
-  function browseFile(e, key) {
-    e.stopPropagation();
-    e.preventDefault();
-    document.querySelector('#zone_' + key + ' input').click();
-  }
-
-  // ── Set today's date ──
   document.getElementById('dateInput').value = new Date().toISOString().slice(0, 10);
 
-  // ── Render slot rows ──
   const grid = document.getElementById('uploadsGrid');
   SLOTS.forEach((slot, i) => {
     grid.innerHTML += `
@@ -661,11 +460,7 @@
           </div>
         </div>
         <div class="slot-right">
-          <textarea
-            class="slot-textarea"
-            id="text_${slot.key}"
-            placeholder="Add a note for this image… (optional)"
-          ></textarea>
+          <textarea class="slot-textarea" id="text_${slot.key}" placeholder="Add a note for this image… (optional)"></textarea>
           <div class="audio-recorder" id="recorder_${slot.audioKey}">
             <button class="rec-btn start" onclick="startRecording('${slot.audioKey}')">🎙 Record</button>
             <span class="rec-timer" id="timer_${slot.audioKey}" style="display:none">0:00</span>
@@ -675,7 +470,6 @@
       </div>`;
   });
 
-  // ── FILE HANDLING ──
   function applyFileToZone(key, file) {
     if (!file || !file.type.startsWith('image/')) return;
     files[key] = file;
@@ -686,18 +480,13 @@
     img.src = URL.createObjectURL(file);
   }
 
-  function handleFile(key, input) {
-    applyFileToZone(key, input.files[0]);
-  }
+  function handleFile(key, input) { applyFileToZone(key, input.files[0]); }
 
   function clearFile(e, key) {
-    e.stopPropagation();
-    files[key] = null;
-    existing[key] = null;
+    e.stopPropagation(); files[key] = null; existing[key] = null;
     const zone = document.getElementById('zone_' + key);
     zone.classList.remove('has-image');
-    const img = zone.querySelector('img');
-    if (img) img.remove();
+    const img = zone.querySelector('img'); if (img) img.remove();
     zone.querySelector('input').value = '';
   }
 
@@ -712,18 +501,11 @@
   function showExistingAudio(audioKey, url) {
     const recEl = document.getElementById('recorder_' + audioKey);
     let player = recEl.querySelector('audio');
-    if (!player) {
-      player = document.createElement('audio');
-      player.className = 'rec-playback';
-      player.controls = true;
-      recEl.appendChild(player);
-    }
+    if (!player) { player = document.createElement('audio'); player.className = 'rec-playback'; player.controls = true; recEl.appendChild(player); }
     player.src = url;
     document.getElementById('status_' + audioKey).textContent = 'Saved voice note ✓';
     const btn = recEl.querySelector('.rec-btn');
-    btn.className = 'rec-btn clear';
-    btn.textContent = '✕ Clear';
-    btn.onclick = () => clearRecording(audioKey);
+    btn.className = 'rec-btn clear'; btn.textContent = '✕ Clear'; btn.onclick = () => clearRecording(audioKey);
   }
 
   function resetForm() {
@@ -733,8 +515,7 @@
     SLOTS.forEach(slot => {
       const zone = document.getElementById('zone_' + slot.key);
       zone.classList.remove('has-image');
-      const img = zone.querySelector('img');
-      if (img) img.remove();
+      const img = zone.querySelector('img'); if (img) img.remove();
       zone.querySelector('input').value = '';
       document.getElementById('text_' + slot.key).value = '';
       resetRecorderUI(slot.audioKey);
@@ -745,61 +526,36 @@
 
   function resetRecorderUI(audioKey) {
     const recEl = document.getElementById('recorder_' + audioKey);
-    const player = recEl.querySelector('audio');
-    if (player) player.remove();
+    const player = recEl.querySelector('audio'); if (player) player.remove();
     document.getElementById('status_' + audioKey).textContent = 'No voice note';
     const btn = recEl.querySelector('.rec-btn');
-    btn.className = 'rec-btn start';
-    btn.textContent = '🎙 Record';
-    btn.onclick = () => startRecording(audioKey);
+    btn.className = 'rec-btn start'; btn.textContent = '🎙 Record'; btn.onclick = () => startRecording(audioKey);
   }
 
-  document.getElementById('dateInput').addEventListener('change', () => {
-    resetForm();
-  });
+  document.getElementById('dateInput').addEventListener('change', () => { resetForm(); });
 
-  // ── LOAD A PAST DAY FOR EDITING ──
   async function loadDay(dateKey) {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/affirmations?date=eq.${dateKey}&select=*`,
-      { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
-    );
+    const res = await adminFetch(`/rest/v1/affirmations?date=eq.${dateKey}&select=*`);
     const rows = await res.json();
     const entry = rows[0];
     if (!entry) return showStatus('Could not load that day.', 'error');
-
     resetForm();
     document.getElementById('dateInput').value = dateKey;
-
     SLOTS.forEach((slot, i) => {
       const imgUrl = entry[slot.key];
-      if (imgUrl) {
-        existing[slot.key] = imgUrl;
-        showImagePreviewFromUrl(slot.key, imgUrl);
-      }
+      if (imgUrl) { existing[slot.key] = imgUrl; showImagePreviewFromUrl(slot.key, imgUrl); }
       const txt = entry['text_' + (i + 1)];
       if (txt) document.getElementById('text_' + slot.key).value = txt;
-
       const audioUrl = entry[slot.audioKey];
-      if (audioUrl) {
-        existing[slot.audioKey] = audioUrl;
-        showExistingAudio(slot.audioKey, audioUrl);
-      }
+      if (audioUrl) { existing[slot.audioKey] = audioUrl; showExistingAudio(slot.audioKey, audioUrl); }
     });
-
     if (entry.love_note) document.getElementById('love_note').value = entry.love_note;
-    if (entry.audio_love_note) {
-      existing['audio_love_note'] = entry.audio_love_note;
-      showExistingAudio('audio_love_note', entry.audio_love_note);
-    }
-
+    if (entry.audio_love_note) { existing['audio_love_note'] = entry.audio_love_note; showExistingAudio('audio_love_note', entry.audio_love_note); }
     showStatus(`Editing ${dateKey} — make your changes and hit Publish to save.`, 'loading');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // ── PASTE SUPPORT ──
   let focusedZoneKey = null;
-
   document.querySelectorAll('.drop-zone').forEach(zone => {
     const key = zone.id.replace('zone_', '');
     zone.addEventListener('focus', () => { focusedZoneKey = key; });
@@ -812,106 +568,57 @@
     if (!items) return;
     for (const item of items) {
       if (item.type.startsWith('image/')) {
-        const file = item.getAsFile();
-        if (!file) continue;
+        const file = item.getAsFile(); if (!file) continue;
         const targetKey = focusedZoneKey || SLOTS.find(s => !files[s.key])?.key;
         if (targetKey) applyFileToZone(targetKey, file);
-        e.preventDefault();
-        break;
+        e.preventDefault(); break;
       }
     }
   });
 
-  // ── RECORDING ──
   async function startRecording(audioKey) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
       const chunks = [];
       recorders[audioKey] = { mediaRecorder, stream };
-
       mediaRecorder.ondataavailable = e => chunks.push(e.data);
       mediaRecorder.onstop = () => {
         const mimeType = mediaRecorder.mimeType || 'audio/webm';
         const blob = new Blob(chunks, { type: mimeType });
         audioBlobs[audioKey] = blob;
         stream.getTracks().forEach(t => t.stop());
-
         const recEl = document.getElementById('recorder_' + audioKey);
         let player = recEl.querySelector('audio');
-        if (!player) {
-          player = document.createElement('audio');
-          player.className = 'rec-playback';
-          player.controls = true;
-          recEl.appendChild(player);
-        }
-        player.src = URL.createObjectURL(blob);
-        player.load();
-
+        if (!player) { player = document.createElement('audio'); player.className = 'rec-playback'; player.controls = true; recEl.appendChild(player); }
+        player.src = URL.createObjectURL(blob); player.load();
         document.getElementById('status_' + audioKey).textContent = 'Voice note ready ✓';
         document.getElementById('timer_' + audioKey).style.display = 'none';
-
         const startBtn = recEl.querySelector('.rec-btn.stop');
-        if (startBtn) {
-          startBtn.className = 'rec-btn clear';
-          startBtn.textContent = '✕ Clear';
-          startBtn.onclick = () => clearRecording(audioKey);
-        }
+        if (startBtn) { startBtn.className = 'rec-btn clear'; startBtn.textContent = '✕ Clear'; startBtn.onclick = () => clearRecording(audioKey); }
       };
-
       mediaRecorder.start();
-
       const recEl = document.getElementById('recorder_' + audioKey);
       const btn = recEl.querySelector('.rec-btn');
-      btn.className = 'rec-btn stop';
-      btn.textContent = '⏹ Stop';
-      btn.onclick = () => stopRecording(audioKey);
-
+      btn.className = 'rec-btn stop'; btn.textContent = '⏹ Stop'; btn.onclick = () => stopRecording(audioKey);
       let secs = 0;
       const timerEl = document.getElementById('timer_' + audioKey);
       timerEl.style.display = 'inline';
-      recTimers[audioKey] = setInterval(() => {
-        secs++;
-        const m = Math.floor(secs / 60);
-        const s = String(secs % 60).padStart(2, '0');
-        timerEl.textContent = `${m}:${s}`;
-      }, 1000);
-
-    } catch (err) {
-      alert('Microphone access denied. Please allow microphone in your browser settings.');
-    }
+      recTimers[audioKey] = setInterval(() => { secs++; const m = Math.floor(secs / 60); const s = String(secs % 60).padStart(2, '0'); timerEl.textContent = `${m}:${s}`; }, 1000);
+    } catch (err) { alert('Microphone access denied. Please allow microphone in your browser settings.'); }
   }
 
-  function stopRecording(audioKey) {
-    clearInterval(recTimers[audioKey]);
-    if (recorders[audioKey]) recorders[audioKey].mediaRecorder.stop();
-  }
+  function stopRecording(audioKey) { clearInterval(recTimers[audioKey]); if (recorders[audioKey]) recorders[audioKey].mediaRecorder.stop(); }
+  function clearRecording(audioKey) { audioBlobs[audioKey] = null; existing[audioKey] = null; resetRecorderUI(audioKey); }
 
-  function clearRecording(audioKey) {
-    audioBlobs[audioKey] = null;
-    existing[audioKey] = null;
-    resetRecorderUI(audioKey);
-  }
-
-  // ── UPLOADS ──
   async function uploadImage(file, dateKey, slot) {
     const ext = file.name ? file.name.split('.').pop() : 'png';
     const path = `${dateKey}/${slot}.${ext}`;
-    const res = await fetch(
-      `${SUPABASE_URL}/storage/v1/object/affirmation-images/${path}`,
-      {
-        method: 'POST',
-        headers: {
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': file.type,
-          'x-upsert': 'true',
-        },
-        body: file
-      }
-    );
+    const res = await adminFetch(`/storage/v1/object/affirmation-images/${path}`, {
+      method: 'POST', contentType: file.type, upsert: true, body: file,
+    });
     if (!res.ok) throw new Error(`Upload failed for ${slot}`);
-    return `${SUPABASE_URL}/storage/v1/object/public/affirmation-images/${path}`;
+    return `${SUPABASE_PUBLIC_URL}/storage/v1/object/public/affirmation-images/${path}`;
   }
 
   async function uploadAudio(blob, dateKey, audioKey) {
@@ -921,31 +628,22 @@
     formData.append('upload_preset', CLOUDINARY_PRESET);
     formData.append('folder', 'carolyn-audio');
     formData.append('resource_type', 'video');
-
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/video/upload`,
-      { method: 'POST', body: formData }
-    );
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/video/upload`, { method: 'POST', body: formData });
     if (!res.ok) throw new Error(`Audio upload failed for ${audioKey}`);
     const data = await res.json();
     return data.secure_url;
   }
 
-  // ── PUBLISH ──
   async function publish() {
     const dateKey = document.getElementById('dateInput').value;
     if (!dateKey) return showStatus('Please choose a date.', 'error');
-
-    const hasAnyImage = Object.values(files).some(f => f !== null) ||
-                        ['image_1','image_2','image_3','image_4'].some(k => existing[k]);
-    const hasNote = document.getElementById('love_note').value.trim() ||
-                    audioBlobs['audio_love_note'] || existing['audio_love_note'];
+    const hasAnyImage = Object.values(files).some(f => f !== null) || ['image_1','image_2','image_3','image_4'].some(k => existing[k]);
+    const hasNote = document.getElementById('love_note').value.trim() || audioBlobs['audio_love_note'] || existing['audio_love_note'];
     if (!hasAnyImage && !hasNote) return showStatus('Please add at least one image or note.', 'error');
 
     const btn = document.getElementById('publishBtn');
     btn.disabled = true;
-    showStatus('Uploading images…', 'loading');
-    showProgress(10);
+    showStatus('Uploading images…', 'loading'); showProgress(10);
 
     try {
       const urls = {};
@@ -955,7 +653,6 @@
         if (files[key]) urls[key] = await uploadImage(files[key], dateKey, key);
         showProgress(10 + (i + 1) * 12);
       }
-
       showStatus('Uploading voice notes…', 'loading');
       const audioKeys = Object.keys(audioBlobs);
       for (let i = 0; i < audioKeys.length; i++) {
@@ -963,18 +660,12 @@
         if (audioBlobs[key]) urls[key] = await uploadAudio(audioBlobs[key], dateKey, key);
         showProgress(60 + (i + 1) * 6);
       }
+      showProgress(90); showStatus('Saving…', 'loading');
 
-      showProgress(90);
-      showStatus('Saving…', 'loading');
-
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/affirmations`, {
+      const res = await adminFetch('/rest/v1/affirmations', {
         method: 'POST',
-        headers: {
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          Prefer: 'resolution=merge-duplicates,return=minimal'
-        },
+        contentType: 'application/json',
+        prefer: 'resolution=merge-duplicates,return=minimal',
         body: JSON.stringify({
           date: dateKey,
           image_1: urls.image_1 || existing.image_1 || null,
@@ -993,55 +684,28 @@
           audio_love_note: urls['audio_love_note'] || existing['audio_love_note'] || null,
         })
       });
-
       if (!res.ok) throw new Error('Database save failed');
-
       showProgress(100);
       showStatus("✓ Published! Her morning is ready ♡", 'success');
       loadRecent();
     } catch (err) {
       showStatus('Error: ' + err.message, 'error');
-    } finally {
-      btn.disabled = false;
-      setTimeout(() => hideProgress(), 1200);
-    }
+    } finally { btn.disabled = false; setTimeout(() => hideProgress(), 1200); }
   }
 
-  function showStatus(msg, type) {
-    const el = document.getElementById('statusBar');
-    el.textContent = msg;
-    el.className = 'status-bar show ' + type;
-  }
+  function showStatus(msg, type) { const el = document.getElementById('statusBar'); el.textContent = msg; el.className = 'status-bar show ' + type; }
+  function showProgress(pct) { document.getElementById('progressWrap').classList.add('show'); document.getElementById('progressBar').style.width = pct + '%'; }
+  function hideProgress() { document.getElementById('progressWrap').classList.remove('show'); document.getElementById('progressBar').style.width = '0%'; }
 
-  function showProgress(pct) {
-    document.getElementById('progressWrap').classList.add('show');
-    document.getElementById('progressBar').style.width = pct + '%';
-  }
-  function hideProgress() {
-    document.getElementById('progressWrap').classList.remove('show');
-    document.getElementById('progressBar').style.width = '0%';
-  }
-
-  // ── RECENT ──
   async function loadRecent() {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/affirmations?select=date,image_1&order=date.desc&limit=10`,
-      { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
-    );
+    const res = await adminFetch('/rest/v1/affirmations?select=date,image_1&order=date.desc&limit=10');
     const rows = await res.json();
     const list = document.getElementById('recentList');
-
-    if (!rows.length) {
-      list.innerHTML = `<p style="font-size:0.83rem; color:var(--soft-graphite);">No entries yet.</p>`;
-      return;
-    }
-
+    if (!rows.length) { list.innerHTML = `<p style="font-size:0.83rem; color:var(--soft-graphite);">No entries yet.</p>`; return; }
     list.innerHTML = rows.map(r => `
       <div class="recent-item">
         ${r.image_1 ? `<img class="recent-thumb" src="${r.image_1}" />` : '<div class="recent-thumb"></div>'}
-        <div class="recent-info">
-          <div class="recent-date">${r.date}</div>
-        </div>
+        <div class="recent-info"><div class="recent-date">${r.date}</div></div>
         <button class="recent-delete" style="border-color: var(--rose); color: var(--deep-rose);" onclick="loadDay('${r.date}')">Edit</button>
         <button class="recent-delete" onclick="deleteEntry('${r.date}')">Remove</button>
       </div>
@@ -1050,14 +714,10 @@
 
   async function deleteEntry(dateKey) {
     if (!confirm(`Remove ${dateKey}?`)) return;
-    await fetch(`${SUPABASE_URL}/rest/v1/affirmations?date=eq.${dateKey}`, {
-      method: 'DELETE',
-      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
-    });
+    await adminFetch(`/rest/v1/affirmations?date=eq.${dateKey}`, { method: 'DELETE' });
     loadRecent();
   }
 
-  // Only load data if already unlocked; otherwise it loads right after unlock
   if (isUnlocked()) loadRecent();
 </script>
 </body>
