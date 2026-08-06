@@ -356,7 +356,7 @@
   //  function at /.netlify/functions/admin-api
   // ══════════════════════════════════════════════════════
 
-  const https://istzagkjchlvjsbrvahm.supabase.co = "https://istzagkjchlvjsbrvahm.supabase.co";
+  const SUPABASE_URL = "https://istzagkjchlvjsbrvahm.supabase.co";
   const CLOUDINARY_CLOUD  = 'dbv3ahmxu';
   const CLOUDINARY_PRESET = 'carolyn_audio';
 
@@ -618,7 +618,7 @@
       method: 'POST', contentType: file.type, upsert: true, body: file,
     });
     if (!res.ok) throw new Error(`Upload failed for ${slot}`);
-    return `${SUPABASE_PUBLIC_URL}/storage/v1/object/public/affirmation-images/${path}`;
+    return `${SUPABASE_URL}/storage/v1/object/public/affirmation-images/${path}`;
   }
 
   async function uploadAudio(blob, dateKey, audioKey) {
