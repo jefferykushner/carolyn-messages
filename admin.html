@@ -607,7 +607,7 @@
     const ext = file.name ? file.name.split('.').pop() : 'png';
     const path = `${dateKey}/${slot}.${ext}`;
     const res = await fetch(
-      `${SUPABASE_URL}/storage/v1/object/affirmation-images/${path}`,
+      `${https://istzagkjchlvjsbrvahm.supabase.co}/storage/v1/object/affirmation-images/${path}`,
       {
         method: 'POST',
         headers: {
@@ -620,7 +620,7 @@
       }
     );
     if (!res.ok) throw new Error(`Upload failed for ${slot}`);
-    return `${SUPABASE_URL}/storage/v1/object/public/affirmation-images/${path}`;
+    return `${https://istzagkjchlvjsbrvahm.supabase.co}/storage/v1/object/public/affirmation-images/${path}`;
   }
 
   async function uploadAudio(blob, dateKey, audioKey) {
@@ -674,7 +674,7 @@
       showProgress(90);
       showStatus('Saving…', 'loading');
 
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/affirmations`, {
+      const res = await fetch(`${https://istzagkjchlvjsbrvahm.supabase.co}/rest/v1/affirmations`, {
         method: 'POST',
         headers: {
           apikey: SUPABASE_ANON_KEY,
@@ -725,7 +725,7 @@
   // ── RECENT ──
   async function loadRecent() {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/affirmations?select=date,image_1&order=date.desc&limit=10`,
+      `${https://istzagkjchlvjsbrvahm.supabase.co}/rest/v1/affirmations?select=date,image_1&order=date.desc&limit=10`,
       { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
     );
     const rows = await res.json();
@@ -749,7 +749,7 @@
 
   async function deleteEntry(dateKey) {
     if (!confirm(`Remove ${dateKey}?`)) return;
-    await fetch(`${SUPABASE_URL}/rest/v1/affirmations?date=eq.${dateKey}`, {
+    await fetch(`${https://istzagkjchlvjsbrvahm.supabase.co}/rest/v1/affirmations?date=eq.${dateKey}`, {
       method: 'DELETE',
       headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
     });
