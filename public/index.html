@@ -732,8 +732,15 @@
 </div>
 
 <script>
-  const https://istzagkjchlvjsbrvahm.supabase.co = 'https://istzagkjchlvjsbrvahm.supabase.co';
-  const SUPABASE_ANON_KEY = 'SUPABASE_SERVICE_ROLE_KEY';
+  // ══════════════════════════════════════════════════════
+  //  IMPORTANT: replace the line below with your real
+  //  Supabase "anon public" key — Supabase Dashboard →
+  //  Project Settings → API → "anon public" key.
+  //  This is SAFE to expose in client-side code; it is
+  //  NOT the same as the service_role key.
+  // ══════════════════════════════════════════════════════
+  const SUPABASE_URL = 'https://istzagkjchlvjsbrvahm.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzdHphZ2tqY2hsdmpzYnJ2YWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTk4MzgsImV4cCI6MjA5NTg3NTgzOH0.7JeL2ScsjC1hoySuKb6q2omgFkGnGoL8dOPDNRNDezk';
 
   // ── NICKNAME ROTATION ──
   const NICKNAMES = ['Angel', 'Sweetheart', 'Sweets', 'Bun-Bun', 'Love'];
@@ -764,7 +771,7 @@
 
   async function fetchDay(dateKey) {
     const res = await fetch(
-      `${https://istzagkjchlvjsbrvahm.supabase.co}/rest/v1/affirmations?date=eq.${dateKey}&select=*`,
+      `${SUPABASE_URL}/rest/v1/affirmations?date=eq.${dateKey}&select=*`,
       { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
     );
     const rows = await res.json();
@@ -773,7 +780,7 @@
 
   async function fetchLibrary() {
     const res = await fetch(
-      `${https://istzagkjchlvjsbrvahm.supabase.co}/rest/v1/affirmations?select=date,image_1&order=date.desc&limit=100`,
+      `${SUPABASE_URL}/rest/v1/affirmations?select=date,image_1&order=date.desc&limit=100`,
       { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
     );
     return await res.json();
@@ -1147,7 +1154,7 @@
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array('BL6-lDWuoO0jKwTcJPQcGFJbzhpWP3IJ1rP_Aj_f6skOloeESzd_2PMeojf_IAgXJOyIeduW4Bbu1TEmx1If1C4')
       });
-      await fetch(`${https://istzagkjchlvjsbrvahm.supabase.co}/rest/v1/push_subscriptions`, {
+      await fetch(`${SUPABASE_URL}/rest/v1/push_subscriptions`, {
         method: 'POST',
         headers: {
           apikey: SUPABASE_ANON_KEY,
